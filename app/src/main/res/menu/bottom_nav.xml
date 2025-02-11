@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/nav_search"
+        android:icon="@drawable/ic_stok"
+        android:title="@string/stok" />
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_history"
+        android:title="@string/riwayat"/>
+    <item
+        android:id="@+id/nav_lainnya"
+        android:icon="@drawable/ic_window"
+        android:title="@string/lainnya" />
+</menu>
