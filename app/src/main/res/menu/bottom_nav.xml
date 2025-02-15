@@ -10,7 +10,7 @@
         android:icon="@drawable/ic_stok"
         android:title="@string/stok" />
     <item
-        android:id="@+id/nav_profile"
+        android:id="@+id/nav_riwayat"
         android:icon="@drawable/ic_history"
         android:title="@string/riwayat"/>
     <item

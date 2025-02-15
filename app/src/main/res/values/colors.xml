@@ -10,4 +10,6 @@
     <color name="primary">#19456B</color>
     <color name="secondary">#357FBE</color>
     <color name="grey">#edf1f0</color>
+    <color name="grey_1">#d4cbcb</color>
+    <color name="grey_btn_h">#afbecb</color>
 </resources>
