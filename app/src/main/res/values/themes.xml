@@ -2,4 +2,7 @@
 <resources>
 
     <style name="Theme.ManagerUsaha" parent="Theme.AppCompat.Light.NoActionBar" />
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/black</item>
+    </style>
 </resources>

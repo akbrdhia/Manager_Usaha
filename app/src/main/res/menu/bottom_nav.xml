@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_home"
         android:title="@string/home" />
     <item
-        android:id="@+id/nav_search"
+        android:id="@+id/nav_stok"
         android:icon="@drawable/ic_stok"
         android:title="@string/stok" />
     <item

@@ -1,6 +1,7 @@
 package com.example.managerusaha
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.graphics.Color
@@ -26,10 +27,11 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> replaceFragment(HomeFragment())
-
+                R.id.nav_stok -> replaceFragment(StokFragment())
             }
             true
         }
+
     }
 
     // Func fragment
