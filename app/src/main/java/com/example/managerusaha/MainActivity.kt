@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> replaceFragment(HomeFragment())
                 R.id.nav_stok -> replaceFragment(StokFragment())
+                R.id.nav_riwayat -> replaceFragment(RiwayatFragment())
             }
             true
         }
