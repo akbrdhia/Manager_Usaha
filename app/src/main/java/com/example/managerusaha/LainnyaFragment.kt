@@ -1,6 +1,5 @@
 package com.example.managerusaha
 
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 
-class RiwayatFragment : Fragment() {
+class LainnyaFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_riwayat, container, false)
+        return inflater.inflate(R.layout.fragment_lainnya, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -25,9 +24,7 @@ class RiwayatFragment : Fragment() {
 
     private fun checkStatusBar() {
         val window = requireActivity().window
-        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
+        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
+        window.decorView.systemUiVisibility = 0
     }
 }

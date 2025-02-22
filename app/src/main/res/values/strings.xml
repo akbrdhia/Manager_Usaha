@@ -16,5 +16,8 @@
     <string name="cari_sesuai_nama">Cari Sesuai Nama</string>
     <string name="barang">Barang</string>
     <string name="tambah_barang">Tambah Barang</string>
+    <string name="pengaturen">Pengaturan</string>
+    <string name="kebijakan_privasi">Kebijakan Privasi</string>
+    <string name="panduan_penggunaan">Panduan Penggunaan</string>
 
 </resources>

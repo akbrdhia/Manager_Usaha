@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout4"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_back"
+    tools:context=".LainnyaFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="390dp"
+        android:background="@drawable/gradient_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/default_judul"
+        android:id="@+id/judul"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <!--  code contennt or button  -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/h_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="234dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/judul">
+
+        <!--   Code in here     -->
+
+        <Button
+            style="@style/default_button"
+            android:id="@+id/btn_panduan_penggunaan"
+            android:layout_marginBottom="12dp"
+            android:textColor="@color/black"
+            android:background="@color/light_blue"
+            android:text="@string/panduan_penggunaan"
+            android:layout_marginHorizontal="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_pengaturan"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            style="@style/default_button"
+            android:id="@+id/btn_pengaturan"
+            android:layout_marginBottom="12dp"
+            android:background="@color/medium_blue"
+            android:text="@string/pengaturen"
+            android:layout_marginHorizontal="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_laporan_keuangan"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            style="@style/default_button"
+            android:id="@+id/btn_laporan_keuangan"
+            android:layout_marginBottom="28dp"
+            android:background="@color/bold_blue"
+            android:text="@string/kebijakan_privasi"
+            android:layout_marginHorizontal="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

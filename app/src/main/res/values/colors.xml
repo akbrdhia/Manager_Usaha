@@ -13,4 +13,7 @@
     <color name="grey_1">#d4cbcb</color>
     <color name="grey_btn_h">#afbecb</color>
     <color name="grey_bold">#404040</color>
+    <color name="light_blue">#7fc7d9</color>
+    <color name="medium_blue">#365486</color>
+    <color name="bold_blue">#0f1035</color>
 </resources>

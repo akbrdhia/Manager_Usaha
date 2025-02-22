@@ -9,13 +9,12 @@
     android:paddingHorizontal="20dp">
 
     <TextView
+        style="@style/default_judul_nobold"
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/barang"
         android:textColor="@color/black"
-        android:layout_marginTop="58dp"
-        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/search_wrap"
         app:layout_constraintTop_toTopOf="parent" />
 
