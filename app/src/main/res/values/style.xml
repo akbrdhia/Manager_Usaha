@@ -27,4 +27,35 @@
         <item name="android:layout_height">48dp</item>
         <item name="android:textAllCaps">false</item>
     </style>
+
+    <!-- Style untuk TextInputLayout (Search & Spinner) -->
+    <style name="DefaultTextInputLayout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="DefaultTextInputLayout1">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/g_b_outline</item>
+    </style>
+
+    <!-- Style untuk TextInputEditText -->
+    <style name="DefaultTextInputEditText">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/g_b_outline</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingStart">48dp</item>
+        <item name="android:paddingEnd">2dp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- Style untuk Garis Pemisah -->
+    <style name="DefaultDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">@color/grey_1</item>
+    </style>
+
 </resources>

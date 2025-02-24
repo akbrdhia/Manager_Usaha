@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -22,6 +23,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkStatusBar()
+
+        val btnp = view.findViewById<Button>(R.id.btn_h_display)
+        val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        btnp.setOnClickListener {
+            (activity as MainActivity).replaceFragment(LainnyaFragment(), "LAINNYA")
+            bottomNav.selectedItemId = R.id.nav_lainnya
+        }
     }
 
 

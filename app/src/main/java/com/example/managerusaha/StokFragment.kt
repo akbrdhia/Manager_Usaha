@@ -47,7 +47,7 @@ class StokFragment : Fragment() {
 
     private fun setDefault() {
         val categories = listOf("Semua", "Makanan", "Minuman", "Other")
-        val filterOptions = listOf("ASC", "DESC")
+        val filterOptions = listOf("Banyak Stok", "Sedikit Stok", "Mahal Harga")
         val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = categoryAdapter

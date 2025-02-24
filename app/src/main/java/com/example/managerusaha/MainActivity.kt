@@ -48,12 +48,13 @@ class MainActivity : AppCompatActivity() {
 
     //  method //
 
-    private fun replaceFragment(fragment: Fragment, tag: String) {
-        supportFragmentManager.beginTransaction()
+    fun replaceFragment(fragment: Fragment, tag: String) {
+        supportFragmentManager.beginTransaction()   
             .replace(R.id.fragment_container, fragment, tag)
             .commit()
         currentFragmentTag = tag
     }
+
 
     private fun setDefault() {
         supportActionBar?.hide()
