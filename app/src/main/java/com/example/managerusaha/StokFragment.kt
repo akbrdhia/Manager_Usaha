@@ -17,7 +17,8 @@ class StokFragment : Fragment() {
 
     private lateinit var searchInput: TextInputEditText
     private lateinit var searchWrap: TextInputLayout
-    private lateinit var spinner: Spinner
+    private lateinit var spinnerCategory: Spinner
+    private lateinit var spinnerFilter: Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,10 +32,11 @@ class StokFragment : Fragment() {
         checkStatusBar()
         searchInput = view.findViewById(R.id.search_in)
         searchWrap = view.findViewById(R.id.search_wrap)
-        spinner = view.findViewById(R.id.category_spinner)
-        setdefault()
-
+        spinnerCategory = view.findViewById(R.id.category_spinner)
+        spinnerFilter = view.findViewById(R.id.filter_spinner)
+        setDefault()
     }
+
     private fun checkStatusBar() {
         val window = requireActivity().window
         window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
@@ -43,16 +45,22 @@ class StokFragment : Fragment() {
         }
     }
 
-    fun setdefault(){
+    private fun setDefault() {
         val categories = listOf("Semua", "Makanan", "Minuman", "Other")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, categories)
-        spinner.adapter = adapter
+        val filterOptions = listOf("ASC", "DESC")
+        val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategory.adapter = categoryAdapter
+        val filterAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, filterOptions)
+        filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerFilter.adapter = filterAdapter
 
         searchWrap.setStartIconOnClickListener {
             val searchText = searchInput.text.toString().trim()
-            val selectedCategory = spinner.selectedItem.toString()
+            val selectedCategory = spinnerCategory.selectedItem.toString()
+            val selectedFilter = spinnerFilter.selectedItem.toString()
 
-            Toast.makeText(requireContext(), "Cari: $searchText di $selectedCategory", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Cari: $searchText di $selectedCategory Dengan Format $selectedFilter", Toast.LENGTH_SHORT).show()
         }
     }
 }
