@@ -8,5 +8,6 @@ data class Barang(
     val kategoriId: Int,
     val stok: Int,
     val harga: Double,
+    val modal: Double,
     val gambarPath: String? = null
 )

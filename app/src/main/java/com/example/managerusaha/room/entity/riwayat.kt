@@ -7,5 +7,5 @@ data class Riwayat(
     val barangId: Int,
     val tanggal: Long,
     val jumlah: Int,
-    val tipe: String
+    val tipe: String // enum (Keluar/Masuk)
 )
