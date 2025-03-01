@@ -1,3 +1,4 @@
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -12,8 +13,8 @@ interface BarangDao {
     suspend fun delete(barang: Barang)
 
     @Query("SELECT * FROM barang")
-    fun getAllBarang(): List<Barang>
+    fun getAllBarang(): LiveData<List<Barang>>
 
     @Query("SELECT * FROM barang WHERE kategoriId = :kategoriId")
-    fun getBarangByKategori(kategoriId: Int): List<Barang>
+    fun getBarangByKategori(kategoriId: Int): LiveData<List<Barang>>
 }
