@@ -1,4 +1,4 @@
-package com.managerusaha.app
+package com.managerusaha.app.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import com.managerusaha.app.R
 
 
 class LainnyaFragment : Fragment() {

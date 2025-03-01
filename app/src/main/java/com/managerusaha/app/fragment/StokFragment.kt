@@ -1,4 +1,4 @@
-package com.managerusaha.app
+package com.managerusaha.app.fragment
 
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.managerusaha.app.R
 
 class StokFragment : Fragment() {
 
@@ -46,15 +47,7 @@ class StokFragment : Fragment() {
     }
 
     private fun setDefault() {
-        val categories = listOf("Semua", "Makanan", "Minuman", "Other")
-        val filterOptions = listOf("Banyak Stok", "Sedikit Stok", "Mahal Harga")
-        val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCategory.adapter = categoryAdapter
-        val filterAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, filterOptions)
-        filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerFilter.adapter = filterAdapter
-
+        setcategory();setfiltter()
         searchWrap.setStartIconOnClickListener {
             val searchText = searchInput.text.toString().trim()
             val selectedCategory = spinnerCategory.selectedItem.toString()
@@ -62,5 +55,19 @@ class StokFragment : Fragment() {
 
             Toast.makeText(requireContext(), "Cari: $searchText di $selectedCategory Dengan Format $selectedFilter", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setfiltter() {
+        val filterOptions = listOf("Banyak Stok", "Sedikit Stok", "Mahal Harga")
+        val filterAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, filterOptions)
+        filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerFilter.adapter = filterAdapter
+    }
+
+    private fun setcategory() {
+        val categories = listOf("Semua", "Makanan", "Minuman", "Other")
+        val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategory.adapter = categoryAdapter
     }
 }

@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.managerusaha.app.fragment.HomeFragment
+import com.managerusaha.app.fragment.LainnyaFragment
+import com.managerusaha.app.fragment.RiwayatFragment
+import com.managerusaha.app.fragment.StokFragment
 
 class MainActivity : AppCompatActivity() {
     private var currentFragmentTag: String? = null

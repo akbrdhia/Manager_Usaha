@@ -1,4 +1,4 @@
-package com.managerusaha.app
+package com.managerusaha.app.fragment
 
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.managerusaha.app.R
 
 class RiwayatFragment : Fragment() {
     private lateinit var searchInput: TextInputEditText

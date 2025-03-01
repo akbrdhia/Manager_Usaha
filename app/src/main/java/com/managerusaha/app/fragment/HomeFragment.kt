@@ -1,4 +1,4 @@
-package com.managerusaha.app
+package com.managerusaha.app.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.managerusaha.app.MainActivity
+import com.managerusaha.app.R
 
 class HomeFragment : Fragment() {
 

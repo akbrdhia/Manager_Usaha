@@ -58,7 +58,9 @@
         android:paddingHorizontal="19dp"
         android:text="@string/tambah_barang"
         app:layout_constraintStart_toStartOf="@+id/search_wrap"
-        app:layout_constraintTop_toBottomOf="@+id/search_wrap" />
+        app:layout_constraintTop_toBottomOf="@+id/search_wrap"
+        android:textSize="15sp"
+        android:textAllCaps="false"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/filter_wrap"

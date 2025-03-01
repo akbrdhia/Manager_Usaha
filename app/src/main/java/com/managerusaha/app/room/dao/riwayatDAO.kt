@@ -9,6 +9,6 @@ interface RiwayatDao {
     @Query("SELECT * FROM riwayat WHERE barangId = :barangId")
     fun getRiwayatByBarang(barangId: Int): LiveData<List<Riwayat>>
 
-    @Query("SELECT * FROM barang")
+    @Query("SELECT * FROM riwayat")
     fun getAllRiwayat(): LiveData<List<Riwayat>>
 }

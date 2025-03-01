@@ -9,7 +9,7 @@ class riwayatViewModel(application: Application) : AndroidViewModel(application)
     private val riwayatDao = AppDatabase.getDatabase(application).riwayatDao()
 
     val allriwayat: LiveData<List<Riwayat>> = riwayatDao.getAllRiwayat()
-    
+
     fun getRiwayatByBarang(barangId: Int): LiveData<List<Riwayat>> {
         return riwayatDao.getRiwayatByBarang(barangId)
     }
