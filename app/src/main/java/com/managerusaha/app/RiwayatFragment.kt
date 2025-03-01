@@ -1,4 +1,4 @@
-package com.example.managerusaha
+package com.managerusaha.app
 
 import android.os.Build
 import android.os.Bundle
@@ -13,18 +13,17 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class StokFragment : Fragment() {
-
+class RiwayatFragment : Fragment() {
     private lateinit var searchInput: TextInputEditText
     private lateinit var searchWrap: TextInputLayout
     private lateinit var spinnerCategory: Spinner
-    private lateinit var spinnerFilter: Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_stok, container, false)
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_riwayat, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,8 +32,21 @@ class StokFragment : Fragment() {
         searchInput = view.findViewById(R.id.search_in)
         searchWrap = view.findViewById(R.id.search_wrap)
         spinnerCategory = view.findViewById(R.id.category_spinner)
-        spinnerFilter = view.findViewById(R.id.filter_spinner)
-        setDefault()
+        setdefault()
+    }
+
+    private fun setdefault() {
+        val categories = listOf("Semua", "Makanan", "Minuman", "Other")
+        val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategory.adapter = categoryAdapter
+
+        searchWrap.setStartIconOnClickListener {
+            val searchText = searchInput.text.toString().trim()
+            val selectedCategory = spinnerCategory.selectedItem.toString()
+
+            Toast.makeText(requireContext(), "Cari: $searchText di $selectedCategory", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun checkStatusBar() {
@@ -42,25 +54,6 @@ class StokFragment : Fragment() {
         window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
-    }
-
-    private fun setDefault() {
-        val categories = listOf("Semua", "Makanan", "Minuman", "Other")
-        val filterOptions = listOf("Banyak Stok", "Sedikit Stok", "Mahal Harga")
-        val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCategory.adapter = categoryAdapter
-        val filterAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, filterOptions)
-        filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerFilter.adapter = filterAdapter
-
-        searchWrap.setStartIconOnClickListener {
-            val searchText = searchInput.text.toString().trim()
-            val selectedCategory = spinnerCategory.selectedItem.toString()
-            val selectedFilter = spinnerFilter.selectedItem.toString()
-
-            Toast.makeText(requireContext(), "Cari: $searchText di $selectedCategory Dengan Format $selectedFilter", Toast.LENGTH_SHORT).show()
         }
     }
 }

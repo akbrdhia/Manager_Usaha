@@ -1,4 +1,4 @@
-package com.example.managerusaha
+package com.managerusaha.app
 
 import org.junit.Test
 

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.managerusaha"
+    namespace = "com.managerusaha.app"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.managerusaha"
+        applicationId = "com.managerusaha.app"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

@@ -1,4 +1,4 @@
-package com.example.managerusaha.ui.theme
+package com.managerusaha.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

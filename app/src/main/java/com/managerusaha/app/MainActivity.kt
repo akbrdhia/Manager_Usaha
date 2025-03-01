@@ -1,10 +1,7 @@
-package com.example.managerusaha
+package com.managerusaha.app
 
 import android.os.Bundle
-import android.view.View
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
