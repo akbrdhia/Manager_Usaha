@@ -26,8 +26,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         app:startIconDrawable="@drawable/ic_search"
-        app:startIconContentDescription="Search icon"
-        >
+        app:startIconContentDescription="Sear4ch icon"
+        android:hint=" ">
 
         <com.google.android.material.textfield.TextInputEditText
             style="@style/DefaultTextInputEditText"

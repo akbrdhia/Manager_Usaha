@@ -32,12 +32,14 @@
     <style name="DefaultTextInputLayout">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint"> </item>
     </style>
 
     <style name="DefaultTextInputLayout1">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/g_b_outline</item>
+        <item name="android:hint"> </item>
     </style>
 
     <!-- Style untuk TextInputEditText -->

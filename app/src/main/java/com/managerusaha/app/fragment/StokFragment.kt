@@ -47,7 +47,8 @@ class StokFragment : Fragment() {
     }
 
     private fun setDefault() {
-        setcategory();setfiltter()
+            setcategory()
+            setfilter()
         searchWrap.setStartIconOnClickListener {
             val searchText = searchInput.text.toString().trim()
             val selectedCategory = spinnerCategory.selectedItem.toString()
@@ -57,7 +58,7 @@ class StokFragment : Fragment() {
         }
     }
 
-    private fun setfiltter() {
+    private fun setfilter() {
         val filterOptions = listOf("Banyak Stok", "Sedikit Stok", "Mahal Harga")
         val filterAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, filterOptions)
         filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     fun replaceFragment(fragment: Fragment, tag: String) {
         supportFragmentManager.beginTransaction()   
             .replace(R.id.fragment_container, fragment, tag)
-            .commit()
+            .commitNow()
         currentFragmentTag = tag
     }
 
