@@ -60,4 +60,13 @@
         <item name="android:background">@color/grey_1</item>
     </style>
 
+    <style name="TextInputStyle123" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary</item>
+    </style>
+
+    <style name="RoundedButton">
+        <item name="cornerSize">16dp</item>
+    </style>
+
+
 </resources>

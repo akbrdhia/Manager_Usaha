@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="@+id/h_display"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!-- Tempat Konten -->
+<!-- TODO Tempat Konten -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/h_content"
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/judul">
 
-        <!--   Code in here     -->
+        <!--  TODO Code in here     -->
 
 
 
@@ -45,7 +45,7 @@
 
 
 
-        <!-- Short-Display_here -->
+        <!-- TODO Short-Display_here -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/h_display"
@@ -59,7 +59,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/judul">
 
-        <!--   Code in here     -->
+        <!--  TODO Code in here     -->
         <TextView
             android:id="@+id/dat"
             android:layout_width="wrap_content"

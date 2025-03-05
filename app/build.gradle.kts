@@ -51,7 +51,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
-
+    implementation(libs.androidx.fragment.ktx)
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
