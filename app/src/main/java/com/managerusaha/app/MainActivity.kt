@@ -1,5 +1,6 @@
 package com.managerusaha.app
 
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -9,6 +10,10 @@ import com.managerusaha.app.fragment.HomeFragment
 import com.managerusaha.app.fragment.LainnyaFragment
 import com.managerusaha.app.fragment.RiwayatFragment
 import com.managerusaha.app.fragment.StokFragment
+import android.Manifest
+import android.util.Log
+import android.widget.Toast
+
 
 class MainActivity : AppCompatActivity() {
     private var currentFragmentTag: String? = null
@@ -17,6 +22,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mainlayout)
         setDefault()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+        }
+
+
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.nav_view)
 
@@ -47,12 +57,13 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
     //  method //
 
     fun replaceFragment(fragment: Fragment, tag: String) {
         supportFragmentManager.beginTransaction()   
             .replace(R.id.fragment_container, fragment, tag)
-            .commitNow()
+            .commit()
         currentFragmentTag = tag
     }
 

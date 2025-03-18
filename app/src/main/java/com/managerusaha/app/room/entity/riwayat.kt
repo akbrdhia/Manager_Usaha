@@ -1,3 +1,5 @@
+package com.managerusaha.app.room.entity
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

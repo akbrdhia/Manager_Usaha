@@ -1,5 +1,8 @@
+package com.managerusaha.app.room.dao
+
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.managerusaha.app.room.entity.Barang
 
 @Dao
 interface BarangDao {
@@ -12,9 +15,24 @@ interface BarangDao {
     @Delete
     suspend fun delete(barang: Barang)
 
-    @Query("SELECT * FROM barang")
+    @Query("SELECT * FROM barang ORDER BY id ASC")
     fun getAllBarang(): LiveData<List<Barang>>
 
     @Query("SELECT * FROM barang WHERE kategoriId = :kategoriId")
     fun getBarangByKategori(kategoriId: Int): LiveData<List<Barang>>
+
+    @Query("SELECT * FROM barang WHERE nama LIKE '%' || :searchQuery || '%'")
+    fun searchBarang(searchQuery: String): LiveData<List<Barang>>
+
+    @Query("SELECT * FROM barang WHERE stok <= :batasStok")
+    fun getBarangStokRendah(batasStok: Int): LiveData<List<Barang>>
+
+    @Query("SELECT * FROM barang WHERE harga BETWEEN :minHarga AND :maxHarga")
+    fun getBarangByRangeHarga(minHarga: Double, maxHarga: Double): LiveData<List<Barang>>
+
+    @Query("UPDATE barang SET stok = stok + :jumlah WHERE id = :barangId")
+    suspend fun updateStok(barangId: Int, jumlah: Int)
+
+    @Query("SELECT * FROM barang WHERE id = :barangId")
+    suspend fun getBarangById(barangId: Int): Barang?
 }

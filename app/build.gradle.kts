@@ -9,6 +9,15 @@ android {
     namespace = "com.managerusaha.app"
     compileSdk = 35
 
+    kapt {
+        correctErrorTypes = true
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+            arg("room.incremental", "true")
+            arg("room.expandProjection", "true")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.managerusaha.app"
         minSdk = 24
@@ -53,6 +62,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.fragment.ktx)
 
+    // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)

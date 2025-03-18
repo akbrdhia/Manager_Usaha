@@ -1,5 +1,6 @@
 package com.managerusaha.app.fragment
 
+import TmpbarangFragment
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
 
 class StokFragment : Fragment() {
@@ -20,6 +23,7 @@ class StokFragment : Fragment() {
     private lateinit var searchWrap: TextInputLayout
     private lateinit var spinnerCategory: Spinner
     private lateinit var spinnerFilter: Spinner
+    private  lateinit var button: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +39,10 @@ class StokFragment : Fragment() {
         searchWrap = view.findViewById(R.id.search_wrap)
         spinnerCategory = view.findViewById(R.id.category_spinner)
         spinnerFilter = view.findViewById(R.id.filter_spinner)
+        button =view.findViewById(R.id.button2)
+        button.setOnClickListener {
+            (activity as MainActivity).replaceFragment(TmpbarangFragment(), " ")
+        }
         setDefault()
     }
 

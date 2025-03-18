@@ -3,6 +3,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.managerusaha.app.room.AppDatabase
+import com.managerusaha.app.room.entity.Riwayat
 import kotlinx.coroutines.launch
 
 class riwayatViewModel(application: Application) : AndroidViewModel(application) {

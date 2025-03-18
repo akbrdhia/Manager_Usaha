@@ -2,6 +2,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.managerusaha.app.room.AppDatabase
+import com.managerusaha.app.room.entity.Kategori
 import kotlinx.coroutines.launch
 
 class KategoriViewModel(application: Application) : AndroidViewModel(application) {
