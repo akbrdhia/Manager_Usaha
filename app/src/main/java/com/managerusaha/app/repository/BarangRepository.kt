@@ -7,7 +7,7 @@ import android.app.Application
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class BarangRepository(application: Application) {
+class  BarangRepository(application: Application) {
     private val barangDao: BarangDao = AppDatabase.getDatabase(application).barangDao()
 
     suspend fun insert(barang: Barang) = withContext(Dispatchers.IO) {
