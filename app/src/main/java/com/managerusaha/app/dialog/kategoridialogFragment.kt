@@ -9,45 +9,31 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.managerusaha.app.R
 
-class KategoriDialogFragment : DialogFragment() {
-
-    interface KategoriDialogListener {
-        fun onKategoriAdded(nama: String)
-    }
-
-    private var listener: KategoriDialogListener? = null
-
+class KategoriDialogFragment(private val onKategoriAdded: (String) -> Unit) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
-        val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_kategori, null)
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_kategori, null)
 
-        val etNamaKategori: EditText = view.findViewById(R.id.et_nama_kategori)
-        val btnTambah: Button = view.findViewById(R.id.btn_tambah_kategori)
+        val etKategori = view.findViewById<EditText>(R.id.et_nama_kategori)
+        val btnSubmit = view.findViewById<Button>(R.id.btn_tambah_kategori)
+        val btnCancel = view.findViewById<Button>(R.id.btn_batal)
 
-        builder.setView(view)
-        val dialog = builder.create()
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(view)
+            .setCancelable(false)
+            .create()
 
-        btnTambah.setOnClickListener {
-            val nama = etNamaKategori.text.toString().trim()
-            if (nama.isNotEmpty()) {
-                listener?.onKategoriAdded(nama)
-                dialog.dismiss()
-            } else {
-                etNamaKategori.error = "Nama kategori harus diisi!"
+        btnSubmit.setOnClickListener {
+            val namaKategori = etKategori.text.toString().trim()
+            if (namaKategori.isNotEmpty()) {
+                onKategoriAdded(namaKategori)
+                dismiss()
             }
         }
 
-        return dialog
-    }
-
-    fun setListener(listener: KategoriDialogListener) {
-        this.listener = listener
-    }
-
-    companion object {
-        fun newInstance(): KategoriDialogFragment {
-            return KategoriDialogFragment()
+        btnCancel.setOnClickListener {
+            dismiss()
         }
+
+        return dialog
     }
 }

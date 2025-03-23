@@ -1,20 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:layout_height="160dp"
+    android:background="@drawable/white_rad"
+    android:paddingHorizontal="15dp">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/tambah_barang"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <EditText
         android:id="@+id/et_nama_kategori"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Nama Kategori" />
+        android:hint="Nama Kategori"
+        android:paddingBottom="10dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_tambah_kategori"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
         android:id="@+id/btn_tambah_kategori"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        android:text="Tambah"
+        android:textAllCaps="false"
+        android:layout_marginVertical="7dp"
+        android:fontFamily="@font/poppins_bold"
+        android:textSize="13sp"
+        android:background="@drawable/secondary_rad"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/et_nama_kategori"
+        app:layout_constraintTop_toBottomOf="@+id/et_nama_kategori" />
+
+    <Button
+        android:id="@+id/btn_batal"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        android:layout_margin="7dp"
+        android:background="@drawable/primary_rad"
+        android:fontFamily="@font/poppins_bold"
+        android:text="@string/batal"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_tambah_kategori"
+        app:layout_constraintTop_toBottomOf="@+id/et_nama_kategori" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tambah" />
-</LinearLayout>
+        android:layout_height="8dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_batal" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

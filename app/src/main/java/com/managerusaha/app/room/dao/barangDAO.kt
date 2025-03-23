@@ -18,8 +18,8 @@ interface BarangDao {
     @Query("SELECT * FROM barang ORDER BY id ASC")
     fun getAllBarang(): LiveData<List<Barang>>
 
-    @Query("SELECT * FROM barang WHERE kategoriId = :kategoriId")
-    fun getBarangByKategori(kategoriId: Int): LiveData<List<Barang>>
+    @Query("SELECT * FROM barang WHERE kategori = :kategori")
+    fun getBarangByKategori(kategori: Int): LiveData<List<Barang>>
 
     @Query("SELECT * FROM barang WHERE nama LIKE '%' || :searchQuery || '%'")
     fun searchBarang(searchQuery: String): LiveData<List<Barang>>
