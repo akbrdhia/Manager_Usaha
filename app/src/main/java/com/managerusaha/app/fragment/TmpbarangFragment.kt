@@ -18,6 +18,7 @@ import com.managerusaha.app.R
 import com.managerusaha.app.dialog.KategoriDialogFragment
 import com.managerusaha.app.room.entity.Barang
 import com.managerusaha.app.room.entity.Kategori
+import com.managerusaha.app.viewmodel.KategoriViewModel
 
 class TmpbarangFragment : Fragment() {
 
@@ -54,13 +55,6 @@ class TmpbarangFragment : Fragment() {
             val p = barangList.joinToString { it.nama }
             Toast.makeText(requireContext(), p, Toast.LENGTH_SHORT).show()
         }
-
-
-        // Observasi barang berdasarkan kategori
-        barangViewModel.getBarangByKategori(1).observe(viewLifecycleOwner) { barangList ->
-        }
-
-
     }
 
     private fun inisialisasi(view: View) {

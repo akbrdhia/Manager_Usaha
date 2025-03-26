@@ -1,3 +1,5 @@
+package com.managerusaha.app.viewmodel
+
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
