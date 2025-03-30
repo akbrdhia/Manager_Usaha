@@ -48,29 +48,19 @@ class StokFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkStatusBar()
-        
-        // Inisialisasi views
         searchInput = view.findViewById(R.id.search_in)
         searchWrap = view.findViewById(R.id.search_wrap)
         spinnerCategory = view.findViewById(R.id.category_spinner)
         spinnerFilter = view.findViewById(R.id.filter_spinner)
         recyclerView = view.findViewById(R.id.recyclerView)
         button = view.findViewById(R.id.button2)
-
-        // Inisialisasi database
         database = AppDatabase.getDatabase(requireContext())
-
-        // Setup RecyclerView
         setupRecyclerView()
-        
-        // Load data
         loadBarangData()
-        
-        // Setup button click
+
         button.setOnClickListener {
             (activity as MainActivity).replaceFragment(TmpbarangFragment(), " ")
         }
-        
         setDefault()
     }
 
@@ -88,11 +78,9 @@ class StokFragment : Fragment() {
         Log.d("StokFragment", "Starting to load barang data")
         database.barangDao().getAllBarang().observe(viewLifecycleOwner) { barangList ->
             Log.d("StokFragment", "Received barang list with size: ${barangList.size}")
-
             if (barangList.isEmpty()) {
                 Log.d("StokFragment", "Barang list is empty")
-                return@observe
-            }
+                return@observe }
 
             val kategoriMap = barangList.groupBy { it.kategori ?: "Tanpa Kategori" }
             Log.d("StokFragment", "Grouped into ${kategoriMap.size} categories")

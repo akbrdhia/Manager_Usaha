@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp"
+        android:paddingVertical="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -17,10 +17,10 @@
             android:id="@+id/tvKategori"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_bold"
+            android:fontFamily="@font/poppins"
             android:text="@string/nama_kategori"
             android:textColor="@color/black"
-            android:textSize="18sp"/>
+            android:textSize="20sp"/>
 
         <ImageView
             android:id="@+id/ivExpand"

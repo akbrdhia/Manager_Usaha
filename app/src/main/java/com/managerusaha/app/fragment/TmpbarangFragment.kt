@@ -123,7 +123,7 @@ class TmpbarangFragment : Fragment() {
 
     private fun category_spin_refresh(){
         kategoriViewModel.allKategori.observe(viewLifecycleOwner) { allkategory ->
-            val categories = mutableListOf("all")
+            val categories = mutableListOf("Lainnya")
             categories.addAll(allkategory.map { it.nama })
 
             val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)

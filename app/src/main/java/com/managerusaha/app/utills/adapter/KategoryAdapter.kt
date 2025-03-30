@@ -108,7 +108,9 @@ class KategoriAdapter(
                 barangText.text = barang.nama
                 stoktext.text = barang.stok.toString()
                 val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+                formatRupiah.maximumFractionDigits = 0
                 hargatext.text = formatRupiah.format(barang.harga).replace("Rp", "Rp ")
+
 
 
                 itemView.setOnClickListener {
