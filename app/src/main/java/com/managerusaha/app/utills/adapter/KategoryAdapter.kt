@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.managerusaha.app.R
 import com.managerusaha.app.room.entity.Barang
 import com.managerusaha.app.utills.model.KategoryExpand
+import java.text.NumberFormat
+import java.util.Locale
 
 class KategoriAdapter(
     private val kategoriList: MutableList<KategoryExpand>,
@@ -93,15 +95,26 @@ class KategoriAdapter(
     }
 
     inner class BarangViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val barangText: TextView = view.findViewById(R.id.tvBarang)
+            private val barangText: TextView = view.findViewById(R.id.tvBarang)
+            private val stoktext: TextView = view.findViewById(R.id.tv_stok)
+            private val hargatext: TextView = view.findViewById(R.id.tvHarga)
+            private val ivbarang: ImageView = view.findViewById(R.id.iv_gambar)
 
-        fun bind(barang: Barang) {
-            Log.d("BarangViewHolder", "Binding barang: ${barang.nama}")
-            barangText.text = barang.nama
-            itemView.setOnClickListener { 
-                Log.d("BarangViewHolder", "Barang clicked: ${barang.nama}")
-                onBarangClick(barang) 
+            fun bind(barang: Barang) {
+                Log.d("BarangViewHolder", "Binding barang: ${barang.nama}")
+                if (barang.gambarPath != null){
+                    ivbarang.setImageURI(android.net.Uri.parse(barang.gambarPath))
+                }
+                barangText.text = barang.nama
+                stoktext.text = barang.stok.toString()
+                val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+                hargatext.text = formatRupiah.format(barang.harga).replace("Rp", "Rp ")
+
+
+                itemView.setOnClickListener {
+                    Log.d("BarangViewHolder", "Barang clicked: ${barang.nama}")
+                    onBarangClick(barang)
+                }
             }
         }
-    }
 }

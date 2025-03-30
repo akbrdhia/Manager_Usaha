@@ -1,20 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:paddingVertical="9dp">
+
+    <ImageView
+        android:id="@+id/iv_gambar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:background="#9aeff0"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_pic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvBarang"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:background="@color/white"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="18dp"
         android:text="@string/nama_barang"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/iv_gambar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_stok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stok"
+        app:layout_constraintStart_toStartOf="@+id/tvBarang"
+        app:layout_constraintTop_toBottomOf="@+id/tvBarang" />
+
+    <TextView
+        android:id="@+id/tvHarga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rp_0"
         android:textSize="16sp"
         android:textColor="@color/black"
-        android:background="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginEnd="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_gambar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_gambar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

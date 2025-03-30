@@ -37,6 +37,7 @@ class TmpbarangFragment : Fragment() {
     private lateinit var btnBatal: Button
     private lateinit var plusIco: ImageView
     private lateinit var GroubBack : FrameLayout
+    private lateinit var icback : ImageView
     private var selectedImagePath: String? = null
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
@@ -116,6 +117,7 @@ class TmpbarangFragment : Fragment() {
         btnBatal = view.findViewById(R.id.btn_batal)
         plusIco = view.findViewById(R.id.plus_ico)
         GroubBack = view.findViewById(R.id.group_back)
+        icback = view.findViewById(R.id.iv_back)
         category_spin_refresh()
     }
 
@@ -159,6 +161,10 @@ class TmpbarangFragment : Fragment() {
         }
 
         GroubBack.setOnClickListener{
+            (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
+        }
+
+        icback.setOnClickListener{
             (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
         }
     }

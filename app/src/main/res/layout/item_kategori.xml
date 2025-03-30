@@ -8,27 +8,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tvKategori"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:fontFamily="@font/poppins_bold"
             android:text="@string/nama_kategori"
-            android:fontFamily="@font/poppins"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
 
         <ImageView
             android:id="@+id/ivExpand"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginHorizontal="5dp"
             android:src="@drawable/ic_expand" />
     </LinearLayout>
 
