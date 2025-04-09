@@ -33,4 +33,7 @@
     <string name="_34">34</string>
     <string name="cth_34">Cth: 34</string>
     <string name="rp_0">Rp. 0</string>
+    <string name="edit_barang">Edit Barang</string>
+    <string name="update">Update</string>
+    <string name="hapus">Hapus</string>
 </resources>

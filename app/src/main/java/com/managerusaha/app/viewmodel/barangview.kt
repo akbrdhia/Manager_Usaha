@@ -54,8 +54,9 @@ class BarangViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    suspend fun getBarangById(barangId: Int): Barang? {
+    fun getBarangById(barangId: Int): LiveData<Barang> {
         return repository.getBarangById(barangId)
     }
+
 }
 

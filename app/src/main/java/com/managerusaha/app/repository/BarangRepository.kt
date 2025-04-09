@@ -4,6 +4,7 @@ import com.managerusaha.app.room.AppDatabase
 import com.managerusaha.app.room.dao.BarangDao
 import com.managerusaha.app.room.entity.Barang
 import android.app.Application
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -37,7 +38,10 @@ class  BarangRepository(application: Application) {
         barangDao.updateStok(barangId, jumlah)
     }
 
-    suspend fun getBarangById(barangId: Int): Barang? = withContext(Dispatchers.IO) {
-        barangDao.getBarangById(barangId)
+
+    fun getBarangById(barangId: Int): LiveData<Barang> {
+        return barangDao.getBarangById(barangId)
     }
+
+
 } 

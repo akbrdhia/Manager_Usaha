@@ -80,7 +80,8 @@ class StokFragment : Fragment() {
             Log.d("StokFragment", "Received barang list with size: ${barangList.size}")
             if (barangList.isEmpty()) {
                 Log.d("StokFragment", "Barang list is empty")
-                return@observe }
+                return@observe
+            }
 
             val kategoriMap = barangList.groupBy { it.kategori ?: "Tanpa Kategori" }
             Log.d("StokFragment", "Grouped into ${kategoriMap.size} categories")
@@ -105,10 +106,8 @@ class StokFragment : Fragment() {
         bundle.putInt("barangId", barangId)
         fragment.arguments = bundle
 
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
+        (activity as MainActivity).replaceFragment(fragment, "EditBarang")
+
     }
 
     private fun checkStatusBar() {

@@ -34,5 +34,6 @@ interface BarangDao {
     suspend fun updateStok(barangId: Int, jumlah: Int)
 
     @Query("SELECT * FROM barang WHERE id = :barangId")
-    suspend fun getBarangById(barangId: Int): Barang?
+    fun getBarangById(barangId: Int): LiveData<Barang>
+
 }
