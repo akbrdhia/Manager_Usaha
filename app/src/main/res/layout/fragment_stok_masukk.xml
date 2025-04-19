@@ -11,7 +11,7 @@
         android:id="@+id/header_title"
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:background="@drawable/gradient_back"
+        android:background="@drawable/gradient_back_green"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <TextView
