@@ -63,20 +63,18 @@ class EditBarangFragment : Fragment() {
         setupKategoriSpinner()
         setuplistener()
 
-        if (barangId != -1) {
-            viewModel.getBarangById(barangId).observe(viewLifecycleOwner) { barang ->
-                barang?.let {
-                    currentBarang = it
-                    etNama.setText(it.nama)
-                    etKuantitas.setText(it.stok.toString())
-                    etHargaBeli.setText(formatRupiah(it.modal))
-                    etHargaJual.setText(formatRupiah(it.harga))
-                    kategoriNamaDariBarang = it.kategori
-                    it.gambarPath?.let { path ->
-                        ivBarang.setImageURI(Uri.parse(path))
-                    }
-                    updateSelectedSpinnerKategori()
+        viewModel.getBarangById(barangId).observe(viewLifecycleOwner) { barang ->
+            barang?.let {
+                currentBarang = it
+                etNama.setText(it.nama)
+                etKuantitas.setText(it.stok.toString())
+                etHargaBeli.setText(formatRupiah(it.modal))
+                etHargaJual.setText(formatRupiah(it.harga))
+                kategoriNamaDariBarang = it.kategori
+                it.gambarPath?.let { path ->
+                    ivBarang.setImageURI(Uri.parse(path))
                 }
+                updateSelectedSpinnerKategori()
             }
         }
     }
@@ -88,6 +86,10 @@ class EditBarangFragment : Fragment() {
             currentBarang?.let { barang ->
                 showDeleteConfirmation(barang)
             }
+        }
+
+        btnTambah?.setOnClickListener {
+            UpdateBarang()
         }
     }
 
@@ -121,7 +123,6 @@ class EditBarangFragment : Fragment() {
         }
     }
 
-
     private fun setupRupiahFormatter(editText: EditText) {
         editText.addTextChangedListener(object : TextWatcher {
             private var current = ""
@@ -154,7 +155,6 @@ class EditBarangFragment : Fragment() {
         return format.format(number).replace(",00", "")
     }
 
-
     private fun setupKategoriSpinner() {
         kategoriViewModel.allKategori.observe(viewLifecycleOwner) { allKategori ->
             val categories = mutableListOf("Lainnya")
@@ -166,5 +166,43 @@ class EditBarangFragment : Fragment() {
 
             updateSelectedSpinnerKategori()
         }
+    }
+
+    private fun getRawDouble(input: String): Double {
+        val cleanString = input.replace("[^0-9]".toRegex(), "")
+        return cleanString.toDoubleOrNull() ?: 0.0
+    }
+
+    private fun UpdateBarang() {
+        val nama = etNama.text.toString().trim()
+        val kuantitas = etKuantitas.text.toString().toIntOrNull() ?: 0
+        val hargaBeli = getRawDouble(etHargaBeli.text.toString())
+        val hargaJual = getRawDouble(etHargaJual.text.toString())
+        val kategori = categorySpinner.selectedItem.toString()
+        val gambarPath = currentBarang?.gambarPath
+
+        if (nama.isEmpty()) {
+            Toast.makeText(requireContext(), "Nama tidak boleh kosong", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (currentBarang == null) {
+            Toast.makeText(requireContext(), "Barang tidak ditemukan", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val updatedBarang = currentBarang!!.copy(
+            nama = nama,
+            stok = kuantitas,
+            modal = hargaBeli,
+            harga = hargaJual,
+            kategori = kategori,
+            gambarPath = gambarPath
+        )
+
+        viewModel.updateBarang(updatedBarang)
+        Toast.makeText(requireContext(), "Barang berhasil diupdate", Toast.LENGTH_SHORT)
+
+        (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
     }
 }

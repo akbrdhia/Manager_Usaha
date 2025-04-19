@@ -58,7 +58,7 @@ class KategoriAdapter(
     }
 
     private fun getItem(position: Int): Any {
-        var count = 0
+         var count = 0
         for (kategori in kategoriList) {
             if (count == position) {
                 Log.d("KategoriAdapter", "Getting kategori at position $position: ${kategori.nama}")
