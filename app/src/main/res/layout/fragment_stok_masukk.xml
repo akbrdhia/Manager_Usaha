@@ -63,6 +63,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="12dp"
         android:background="@drawable/g_b_outline"
+        android:clickable="true"
         android:padding="5dp"
         android:src="@drawable/ic_scan"
         app:layout_constraintStart_toEndOf="@+id/category_wrap"
