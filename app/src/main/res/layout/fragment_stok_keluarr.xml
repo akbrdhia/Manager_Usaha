@@ -59,6 +59,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
+        android:id="@+id/ic_scan"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="12dp"

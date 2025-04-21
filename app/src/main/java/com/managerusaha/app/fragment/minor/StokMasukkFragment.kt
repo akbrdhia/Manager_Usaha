@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.managerusaha.app.MainActivity
@@ -21,6 +23,7 @@ class StokMasukkFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var kategoriAdapter: KategoriAdapter
     private lateinit var database: AppDatabase
+    private  lateinit var scan: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,10 +39,18 @@ class StokMasukkFragment : Fragment() {
         database = AppDatabase.getDatabase(requireContext())
         setupRecyclerView()
         loadBarangData()
+        handleItemClick()
+    }
+
+    private fun handleItemClick() {
+        scan.setOnClickListener {
+            Toast.makeText(requireContext(), "Kamera Tidak Terdeteksi", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun inisialisasi(view: View) {
         recyclerView = view.findViewById(R.id.recyclerView)
+        scan = view.findViewById(R.id.ic_scan)
     }
 
     private fun loadBarangData() {
