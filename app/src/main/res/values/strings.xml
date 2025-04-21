@@ -38,4 +38,8 @@
     <string name="hapus">Hapus</string>
     <string name="xxxxx">xxxxx</string>
     <string name="laporan">Laporan</string>
+    <string name="total_pendapatan">Total Pendapatan</string>
+    <string name="harian">Harian</string>
+    <string name="mingguan">Mingguan</string>
+    <string name="bulanan">Bulanan</string>
 </resources>

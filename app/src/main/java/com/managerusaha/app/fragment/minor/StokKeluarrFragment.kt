@@ -20,7 +20,7 @@ class StokKeluarrFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var kategoriAdapter: KategoriAdapter
     private lateinit var database: AppDatabase
-    private  lateinit var scan: ImageView
+    private lateinit var scan: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
