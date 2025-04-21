@@ -10,7 +10,7 @@
     <FrameLayout
         android:id="@+id/header_title"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="140dp"
         android:background="@drawable/gradient_back_green"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/stok_masuk"
             android:textSize="20sp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:textColor="@color/white"
             android:fontFamily="@font/poppins_bold"
             android:layout_marginStart="20dp"

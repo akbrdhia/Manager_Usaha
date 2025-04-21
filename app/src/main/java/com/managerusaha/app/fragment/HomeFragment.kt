@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
+import com.managerusaha.app.fragment.minor.StokKeluarrFragment
+import com.managerusaha.app.fragment.minor.StokMasukkFragment
 
 class HomeFragment : Fragment() {
 
@@ -28,7 +30,16 @@ class HomeFragment : Fragment() {
     }
 
     fun handle() {
-        handle_btn_h_display()
+        handle_btn_Stok_Masuk()
+        handle_btn_stok_keluar()
+    }
+
+    private fun handle_btn_stok_keluar() {
+        val btnp = view?.findViewById<Button>(R.id.btn_stok_keluar)
+        val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        btnp?.setOnClickListener {
+            (activity as MainActivity).replaceFragment(StokKeluarrFragment(), "STOK KELUAR")
+        }
     }
 
     fun checkStatusBar() {
@@ -37,20 +48,11 @@ class HomeFragment : Fragment() {
         window.decorView.systemUiVisibility = 0
     }
 
-
-
-
-
-
-
-
-    private fun handle_btn_h_display() {
-        val btnp = view?.findViewById<Button>(R.id.btn_h_display)
+    private fun handle_btn_Stok_Masuk() {
+        val btnp = view?.findViewById<Button>(R.id.btn_stok_masuk)
         val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
         btnp?.setOnClickListener {
-            (activity as MainActivity).replaceFragment(LainnyaFragment(), "LAINNYA")
-
-            bottomNav.selectedItemId = R.id.nav_lainnya
+            (activity as MainActivity).replaceFragment(StokMasukkFragment(), "STOK MASUK")
         }
     }
 

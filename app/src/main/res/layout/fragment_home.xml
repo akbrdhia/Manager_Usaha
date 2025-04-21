@@ -318,18 +318,34 @@
 
 
         <Button
-            android:id="@+id/btn_h_display"
-            android:layout_width="match_parent"
+            android:id="@+id/btn_stok_masuk"
+            android:layout_width="0dp"
             android:layout_height="55dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="28dp"
             android:background="@drawable/btn_h"
-            android:drawableStart="@drawable/ic_increase"
-            android:paddingHorizontal="90dp"
-            android:text="@string/laporan_keuangan"
-            android:textSize="12sp"
+            android:paddingHorizontal="20dp"
+            android:text="Stok Masuk"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_stok_keluar"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btn_stok_keluar"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="28dp"
+            android:background="@drawable/btn_h"
+            android:paddingHorizontal="20dp"
+            android:text="Stok Keluar"
+            android:textAllCaps="false"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/btn_stok_masuk" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
