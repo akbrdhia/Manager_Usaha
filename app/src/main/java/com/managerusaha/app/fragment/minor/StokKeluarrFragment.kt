@@ -48,6 +48,7 @@ class StokKeluarrFragment : Fragment() {
     private fun inisialisasi(view: View) {
         recyclerView = view.findViewById(R.id.recyclerView)
         scan = view.findViewById(R.id.ic_scan)
+        scan = view.findViewById(R.id.ic_scan)
     }
 
     private fun loadBarangData() {

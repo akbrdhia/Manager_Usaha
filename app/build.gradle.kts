@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.androidx.fragment.ktx)
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
 
     // Room
     implementation(libs.room.runtime)
