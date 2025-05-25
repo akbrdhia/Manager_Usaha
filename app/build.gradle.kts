@@ -62,7 +62,11 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.fragment.ktx)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.view)
 
     // Room
     implementation(libs.room.runtime)

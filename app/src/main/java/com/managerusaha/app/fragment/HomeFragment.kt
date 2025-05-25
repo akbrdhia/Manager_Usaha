@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
         handle_btn_stok_keluar()
     }
 
-    private fun handle_btn_stok_keluar() {
+     private fun handle_btn_stok_keluar() {
         val btnp = view?.findViewById<Button>(R.id.btn_stok_keluar)
         val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
         btnp?.setOnClickListener {
