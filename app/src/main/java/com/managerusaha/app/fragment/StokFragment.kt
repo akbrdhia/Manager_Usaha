@@ -66,9 +66,8 @@ class StokFragment : Fragment() {
 
     private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(context)
-        // Inisialisasi adapter dengan list kosong terlebih dahulu
         kategoriAdapter = KategoriAdapter(mutableListOf()) { barang ->
-            navigateToEditBarang(barang.id)
+            //wait
         }
         recyclerView.adapter = kategoriAdapter
         Log.d("StokFragment", "RecyclerView setup completed")

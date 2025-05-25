@@ -11,7 +11,6 @@ import com.managerusaha.app.fragment.LainnyaFragment
 import com.managerusaha.app.fragment.RiwayatFragment
 import com.managerusaha.app.fragment.StokFragment
 import android.Manifest
-import android.app.Fragment
 
 class MainActivity : AppCompatActivity() {
     private var currentFragmentTag: String? = null

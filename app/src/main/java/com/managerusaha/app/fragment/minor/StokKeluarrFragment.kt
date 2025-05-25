@@ -48,7 +48,7 @@ class StokKeluarrFragment : Fragment() {
     private fun inisialisasi(view: View) {
         recyclerView = view.findViewById(R.id.recyclerView)
         scan = view.findViewById(R.id.ic_scan)
-        scan = view.findViewById(R.id.ic_scan)
+
     }
 
     private fun loadBarangData() {
@@ -68,19 +68,23 @@ class StokKeluarrFragment : Fragment() {
                 KategoryExpand(key, value)
             }
 
-            // Update adapter dengan data baru
             kategoriAdapter = KategoriAdapter(kategoriList.toMutableList()) { barang ->
-                // s navigateToEditBarang(barang.id)
+               navigatetopopup(barang.id)
             }
             recyclerView.adapter = kategoriAdapter
             Log.d("StokFragment", "Adapter updated with new data")
         }
     }
 
+    private fun navigatetopopup(barangid: Int) {
+        val sheet = sheetstokListDialogFragment()
+        sheet.show(parentFragmentManager, "sheet")
+    }
+
     private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         kategoriAdapter = KategoriAdapter(mutableListOf()) { barang ->
-            // navigateToEditBarang(barang.id)
+           //wait
         }
         recyclerView.adapter = kategoriAdapter
         Log.d("StokFragment", "RecyclerView setup completed")

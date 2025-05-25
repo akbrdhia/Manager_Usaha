@@ -46,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
 }
 
@@ -71,6 +72,8 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.recyclerview)
     kapt(libs.room.compiler)
 
     implementation(libs.lifecycle.viewmodel.ktx)
