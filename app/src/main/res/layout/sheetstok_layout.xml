@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
-    android:layout_height="255dp"
+    android:layout_height="wrap_content"
+    android:minHeight="255dp"
     android:paddingHorizontal="24dp">
 
     <LinearLayout
@@ -16,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/l_judul"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
@@ -23,6 +25,7 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
         <TextView
+            android:id="@+id/l_nambar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"

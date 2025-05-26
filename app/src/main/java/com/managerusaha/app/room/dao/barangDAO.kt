@@ -31,7 +31,10 @@ interface BarangDao {
     fun getBarangByRangeHarga(minHarga: Double, maxHarga: Double): LiveData<List<Barang>>
 
     @Query("UPDATE barang SET stok = stok + :jumlah WHERE id = :barangId")
-    suspend fun updateStok(barangId: Int, jumlah: Int)
+    suspend fun tambahStok(barangId: Int, jumlah: Int)
+
+    @Query("UPDATE barang SET stok = stok - :jumlah WHERE id = :barangId")
+    suspend fun kurangStok(barangId: Int, jumlah: Int)
 
     @Query("SELECT * FROM barang WHERE id = :barangId")
     fun getBarangById(barangId: Int): LiveData<Barang>

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.managerusaha.app.R
+import com.managerusaha.app.dialog.sheetstokListDialogFragment
 import com.managerusaha.app.room.AppDatabase
 import com.managerusaha.app.utills.adapter.KategoriAdapter
 import com.managerusaha.app.utills.model.KategoryExpand
@@ -78,6 +79,11 @@ class StokKeluarrFragment : Fragment() {
 
     private fun navigatetopopup(barangid: Int) {
         val sheet = sheetstokListDialogFragment()
+        val bundle = Bundle()
+        bundle.putInt("barangid", barangid)
+        bundle.putString("mode", "KELUAR")
+        sheet.arguments = bundle
+        Log.d("StokFragment", "Navigating to popup with barangid: $barangid")
         sheet.show(parentFragmentManager, "sheet")
     }
 

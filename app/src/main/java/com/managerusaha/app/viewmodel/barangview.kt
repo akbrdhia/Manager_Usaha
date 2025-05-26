@@ -48,9 +48,15 @@ class BarangViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateStok(barangId: Int, jumlah: Int) {
+    fun kurangStok(barangId: Int, jumlah: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateStok(barangId, jumlah)
+            repository.kurangStok(barangId, jumlah)
+        }
+    }
+
+    fun tambahStok(barangId: Int, jumlah: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.tambahStok(barangId, jumlah)
         }
     }
 

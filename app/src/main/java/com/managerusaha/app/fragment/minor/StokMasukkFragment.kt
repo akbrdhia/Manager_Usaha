@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
+import com.managerusaha.app.dialog.sheetstokListDialogFragment
 import com.managerusaha.app.fragment.EditBarangFragment
 import com.managerusaha.app.room.AppDatabase
 import com.managerusaha.app.utills.adapter.KategoriAdapter
@@ -72,29 +73,30 @@ class StokMasukkFragment : Fragment() {
 
             // Update adapter dengan data baru
             kategoriAdapter = KategoriAdapter(kategoriList.toMutableList()) { barang ->
-                // navigateToEditBarang(barang.id)
+                navigatetopopup(barang.id)
             }
             recyclerView.adapter = kategoriAdapter
             Log.d("StokFragment", "Adapter updated with new data")
         }
     }
 
+    private fun navigatetopopup(id: Int) {
+        val sheet = sheetstokListDialogFragment()
+        val bundle = Bundle()
+        bundle.putInt("barangid", id)
+        bundle.putString("mode", "MASUK")
+        sheet.arguments = bundle
+        sheet.show(parentFragmentManager, "sheet")
+
+    }
+
     private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         kategoriAdapter = KategoriAdapter(mutableListOf()) { barang ->
-            // navigateToEditBarang(barang.id)
+
         }
         recyclerView.adapter = kategoriAdapter
         Log.d("StokFragment", "RecyclerView setup completed")
     }
 
-    private fun navigateToEditBarang(barangId: Int) {
-        val fragment = EditBarangFragment()
-        val bundle = Bundle()
-        bundle.putInt("barangId", barangId)
-        fragment.arguments = bundle
-
-        (activity as MainActivity).replaceFragment(fragment, "EditBarang")
-
-    }
 }

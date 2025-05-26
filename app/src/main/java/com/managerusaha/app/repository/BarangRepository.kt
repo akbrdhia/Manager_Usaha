@@ -34,10 +34,12 @@ class       BarangRepository(application: Application) {
     fun getBarangByRangeHarga(minHarga: Double, maxHarga: Double) = 
         barangDao.getBarangByRangeHarga(minHarga, maxHarga)
 
-    suspend fun updateStok(barangId: Int, jumlah: Int) = withContext(Dispatchers.IO) {
-        barangDao.updateStok(barangId, jumlah)
+    suspend fun kurangStok(barangId: Int, jumlah: Int) = withContext(Dispatchers.IO) {
+        barangDao.kurangStok(barangId, jumlah)
     }
-
+    suspend fun tambahStok(barangId: Int, jumlah: Int) = withContext(Dispatchers.IO) {
+        barangDao.tambahStok(barangId, jumlah)
+    }
 
     fun getBarangById(barangId: Int): LiveData<Barang> {
         return barangDao.getBarangById(barangId)
