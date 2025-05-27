@@ -97,7 +97,7 @@ class KategoriAdapter(
     inner class BarangViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             private val barangText: TextView = view.findViewById(R.id.tvBarang)
             private val stoktext: TextView = view.findViewById(R.id.tv_stok)
-            private val hargatext: TextView = view.findViewById(R.id.tvHarga)
+            private val hargatext : TextView = view.findViewById(R.id.tvHarga)
             private val ivbarang: ImageView = view.findViewById(R.id.iv_gambar)
 
             fun bind(barang: Barang) {

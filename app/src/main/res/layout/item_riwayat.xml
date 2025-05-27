@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingVertical="9dp">
+
+    <ImageView
+        android:id="@+id/iv_gambarr"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/grey_round"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_barangg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/nama_barang"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/iv_gambarr"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_stokk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stok"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_barangg"
+        app:layout_constraintTop_toBottomOf="@+id/tv_barangg" />
+
+    <TextView
+        android:id="@+id/tv_tanggall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:text="DD/MM/YYYY"
+        app:layout_constraintStart_toStartOf="@+id/tv_barangg"
+        app:layout_constraintTop_toBottomOf="@+id/tv_stokk" />
+
+
+    <TextView
+        android:id="@+id/tv_hargaa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:fontFamily="@font/inter"
+        android:text="@string/rp_0"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_gambarr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/img_line"
+        app:layout_constraintTop_toTopOf="@+id/iv_gambarr" />
+
+    <ImageView
+        android:id="@+id/img_line"
+        android:layout_width="5dp"
+        android:layout_height="54dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/redline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

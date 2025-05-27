@@ -51,17 +51,18 @@ class sheetstokListDialogFragment : BottomSheetDialogFragment() {
                 if (mode == "KELUAR") {
                     barangViewModel.kurangStok(
                         barangId = id,
-                        jumlah = l_jumlah.text.toString().toInt()
+                        jumlah = l_jumlah.text.toString().toInt(),
+                        tanggal = System.currentTimeMillis()
                     )
                     Toast.makeText(requireContext(), "Stok Telah Di Kurangi", Toast.LENGTH_SHORT).show()
                 } else {
                     barangViewModel.tambahStok(
                         barangId = id,
-                        jumlah = l_jumlah.text.toString().toInt()
+                        jumlah = l_jumlah.text.toString().toInt(),
+                        tanggal = System.currentTimeMillis()
                     )
                     Toast.makeText(requireContext(), "Stok Telah Di Tambahkan", Toast.LENGTH_SHORT).show()
-                }
-                dismiss()
+                };dismiss()
             }
         }
 

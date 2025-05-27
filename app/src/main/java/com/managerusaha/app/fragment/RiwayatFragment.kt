@@ -1,5 +1,6 @@
 package com.managerusaha.app.fragment
 
+import RiwayatAdapter
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,11 +11,21 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.managerusaha.app.R
+import com.managerusaha.app.utills.model.RiwayatWithNama
+import com.managerusaha.app.viewmodel.BarangViewModel
+import com.managerusaha.app.viewmodel.riwayatViewModel
 
 class RiwayatFragment : Fragment() {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: RiwayatAdapter
+    private val riwayatViewModel: riwayatViewModel by viewModels()
+    private val barangViewModel: BarangViewModel by viewModels()
     private lateinit var searchInput: TextInputEditText
     private lateinit var searchWrap: TextInputLayout
     private lateinit var spinnerCategory: Spinner
@@ -33,11 +44,35 @@ class RiwayatFragment : Fragment() {
         searchInput = view.findViewById(R.id.search_in)
         searchWrap = view.findViewById(R.id.search_wrap)
         spinnerCategory = view.findViewById(R.id.category_spinner)
+        recyclerView = view.findViewById(R.id.recycler_riwayat)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = RiwayatAdapter(emptyList())
+        recyclerView.adapter = adapter
+        barangViewModel.allBarang.observe(viewLifecycleOwner) { barangList ->
+            riwayatViewModel.allriwayat.observe(viewLifecycleOwner) { riwayatList ->
+                val combined = riwayatList.mapNotNull { r ->
+                    val barang = barangList.find { it.id == r.barangId }
+                    barang?.let {
+                        RiwayatWithNama(
+                            id = r.id,
+                            barangId = r.barangId,
+                            namaBarang = it.nama,
+                            tanggal = r.tanggal,
+                            jumlah = r.jumlah,
+                            tipe = r.tipe
+                        )
+                    }
+                }
+                adapter.updateData(combined)
+            }
+        }
+
         setdefault()
     }
 
+
     private fun setdefault() {
-        val categories = listOf("Semua", "Makanan", "Minuman", "Other")
+        val categories = listOf("All", "Audit", "Keluar", "Masuk")
         val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = categoryAdapter
