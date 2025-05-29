@@ -1,11 +1,14 @@
 package com.managerusaha.app.utills.adapter
 
+import android.graphics.ImageDecoder
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.managerusaha.app.R
 import com.managerusaha.app.room.entity.Barang
@@ -100,11 +103,21 @@ class KategoriAdapter(
             private val hargatext : TextView = view.findViewById(R.id.tvHarga)
             private val ivbarang: ImageView = view.findViewById(R.id.iv_gambar)
 
+            @RequiresApi(Build.VERSION_CODES.P)
             fun bind(barang: Barang) {
                 Log.d("BarangViewHolder", "Binding barang: ${barang.nama}")
-                if (barang.gambarPath != null){
-                    ivbarang.setImageURI(android.net.Uri.parse(barang.gambarPath))
+                if (barang.gambarPath != null) {
+                    try {
+                        val source = ImageDecoder.createSource(ivbarang.context.contentResolver, android.net.Uri.parse(barang.gambarPath))
+                        val bitmap = ImageDecoder.decodeBitmap(source)
+                        ivbarang.setImageBitmap(bitmap)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    Log.d("BarangViewHolder", "No gambar found for barang: ${barang.nama}")
                 }
+
                 barangText.text = barang.nama
                 stoktext.text = barang.stok.toString()
                 val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))

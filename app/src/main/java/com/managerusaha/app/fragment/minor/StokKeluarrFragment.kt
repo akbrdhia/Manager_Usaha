@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
 import com.managerusaha.app.dialog.sheetstokListDialogFragment
 import com.managerusaha.app.room.AppDatabase
@@ -42,8 +43,9 @@ class StokKeluarrFragment : Fragment() {
 
     private fun handleItemClick() {
         scan.setOnClickListener {
-            Toast.makeText(requireContext(), "Kamera Tidak Terdeteksi", Toast.LENGTH_SHORT).show()
+            (activity as MainActivity).replaceFragment(CamFragment(), "CAM")
         }
+
     }
 
     private fun inisialisasi(view: View) {
