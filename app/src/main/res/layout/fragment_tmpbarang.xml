@@ -218,7 +218,7 @@
             android:background="#9aeff0"
             android:layout_marginTop="8dp"
             android:padding="8dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_pic"

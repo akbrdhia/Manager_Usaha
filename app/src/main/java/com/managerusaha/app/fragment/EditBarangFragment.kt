@@ -32,6 +32,7 @@ class EditBarangFragment : Fragment() {
     private lateinit var etHargaJual: EditText
     private lateinit var categorySpinner: Spinner
     private lateinit var ivBarang: ImageView
+    private lateinit var groub_back : FrameLayout
     private var kategoriNamaDariBarang: String? = null
     private var currentBarang: Barang? = null
 
@@ -49,16 +50,8 @@ class EditBarangFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = ViewModelProvider(this)[BarangViewModel::class.java]
-
-        etNama = view.findViewById(R.id.et_nama)
-        etKuantitas = view.findViewById(R.id.et_kuantitas)
-        etHargaBeli = view.findViewById(R.id.et_harga_beli)
-        etHargaJual = view.findViewById(R.id.et_harga_jual)
-        categorySpinner = view.findViewById(R.id.category_spinner)
-        ivBarang = view.findViewById(R.id.iv_barang)
-
+        inisalisasi(view)
         setupFormatHarga()
         setupKategoriSpinner()
         setuplistener()
@@ -79,9 +72,21 @@ class EditBarangFragment : Fragment() {
         }
     }
 
+    private fun inisalisasi(view: View) {
+        etNama = view.findViewById(R.id.et_nama)
+        etKuantitas = view.findViewById(R.id.et_kuantitas)
+        etHargaBeli = view.findViewById(R.id.et_harga_beli)
+        etHargaJual = view.findViewById(R.id.et_harga_jual)
+        categorySpinner = view.findViewById(R.id.category_spinner)
+        ivBarang = view.findViewById(R.id.iv_barang)
+    }
+
     private fun setuplistener() {
         val btnTambah = view?.findViewById<Button>(R.id.btn_tambah)
         val btnHapus = view?.findViewById<Button>(R.id.btn_hapus)
+        groub_back.setOnClickListener {
+            (activity as MainActivity).replaceFragment(StokFragment(), "Stok")
+        }
         btnHapus?.setOnClickListener {
             currentBarang?.let { barang ->
                 showDeleteConfirmation(barang)

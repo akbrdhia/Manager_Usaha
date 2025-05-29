@@ -219,6 +219,7 @@ class TmpbarangFragment : Fragment() {
 
         barangViewModel.insertBarang(barangbaru)
         Toast.makeText(requireContext(), "Barang berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+        (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
     }
 
 }
