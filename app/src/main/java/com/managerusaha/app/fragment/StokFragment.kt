@@ -104,7 +104,6 @@ class StokFragment : Fragment() {
         val bundle = Bundle()
         bundle.putInt("barangId", barangId)
         fragment.arguments = bundle
-
         (activity as MainActivity).replaceFragment(fragment, "EditBarang")
 
     }

@@ -43,7 +43,11 @@ class StokKeluarrFragment : Fragment() {
 
     private fun handleItemClick() {
         scan.setOnClickListener {
-            (activity as MainActivity).replaceFragment(CamFragment(), "CAM")
+            val scan = CamFragment()
+            val bundle = Bundle()
+            bundle.putString("from", "stokkeluar")
+            scan.arguments = bundle
+            (activity as MainActivity).replaceFragment(scan, "SCAN")
         }
 
     }
