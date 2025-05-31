@@ -43,12 +43,18 @@ class StokKeluarrFragment : Fragment() {
 
     private fun handleItemClick() {
         scan.setOnClickListener {
-            val scan = CamFragment()
-            val bundle = Bundle()
-            bundle.putString("from", "stokkeluar")
-            scan.arguments = bundle
-            (activity as MainActivity).replaceFragment(scan, "SCAN")
+            val camFragment = CamFragment().apply {
+                arguments = Bundle().apply {
+                    putString("from", "stokkeluar")
+                }
+            }
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, camFragment)
+                .addToBackStack(null) // ini penting biar bisa "balik"
+                .commit()
         }
+
 
     }
 
@@ -82,6 +88,8 @@ class StokKeluarrFragment : Fragment() {
             Log.d("StokFragment", "Adapter updated with new data")
         }
     }
+
+
 
     private fun navigatetopopup(barangid: Int) {
         val sheet = sheetstokListDialogFragment()

@@ -45,7 +45,11 @@ class StokMasukkFragment : Fragment() {
 
     private fun handleItemClick() {
         scan.setOnClickListener {
-            Toast.makeText(requireContext(), "Kamera Tidak Terdeteksi", Toast.LENGTH_SHORT).show()
+            val scan = CamFragment()
+            val bundle = Bundle()
+            bundle.putString("from", "stokmasuk")
+            scan.arguments = bundle
+            (activity as MainActivity).replaceFragment(scan, "SCAN")
         }
     }
 
