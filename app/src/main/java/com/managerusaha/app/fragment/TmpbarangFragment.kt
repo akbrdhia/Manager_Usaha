@@ -25,19 +25,19 @@ import java.util.Locale
 class TmpbarangFragment : Fragment() {
 
     private val barangViewModel: BarangViewModel by viewModels()
-    private val kategoriViewModel : KategoriViewModel by viewModels()
+    private val kategoriViewModel: KategoriViewModel by viewModels()
 
     private lateinit var ivBarang: ImageView
     private lateinit var etNama: EditText
     private lateinit var etStok: EditText
-    private lateinit var spinkategory : Spinner
+    private lateinit var spinkategory: Spinner
     private lateinit var etHarga: EditText
     private lateinit var etModal: EditText
     private lateinit var btnTambah: Button
     private lateinit var btnBatal: Button
     private lateinit var plusIco: ImageView
-    private lateinit var GroubBack : FrameLayout
-    private lateinit var icback : ImageView
+    private lateinit var GroubBack: FrameLayout
+    private lateinit var icback: ImageView
     private var selectedImagePath: String? = null
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
@@ -121,12 +121,13 @@ class TmpbarangFragment : Fragment() {
         category_spin_refresh()
     }
 
-    private fun category_spin_refresh(){
+    private fun category_spin_refresh() {
         kategoriViewModel.allKategori.observe(viewLifecycleOwner) { allkategory ->
             val categories = mutableListOf("Lainnya")
             categories.addAll(allkategory.map { it.nama })
 
-            val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+            val categoryAdapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
             categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinkategory.adapter = categoryAdapter
         }
@@ -149,8 +150,12 @@ class TmpbarangFragment : Fragment() {
 
         plusIco.setOnClickListener {
             val dialog = KategoriDialogFragment { kategoriNama ->
-               kategoriViewModel.insertKategori(Kategori(nama = kategoriNama))
-                Toast.makeText(requireContext(), "Kategori ditambahkan: $kategoriNama", Toast.LENGTH_SHORT).show()
+                kategoriViewModel.insertKategori(Kategori(nama = kategoriNama))
+                Toast.makeText(
+                    requireContext(),
+                    "Kategori ditambahkan: $kategoriNama",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             dialog.show(parentFragmentManager, "KategoriDialog")
         }
@@ -160,11 +165,11 @@ class TmpbarangFragment : Fragment() {
             pickImageLauncher.launch("image/*")
         }
 
-        GroubBack.setOnClickListener{
+        GroubBack.setOnClickListener {
             (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
         }
 
-        icback.setOnClickListener{
+        icback.setOnClickListener {
             (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
         }
     }

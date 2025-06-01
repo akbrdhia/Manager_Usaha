@@ -17,71 +17,78 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.managerusaha.app.R
-import com.managerusaha.app.utills.model.RiwayatWithNama
-import com.managerusaha.app.viewmodel.BarangViewModel
+import com.managerusaha.app.utills.model.RiwayatWithBarang
 import com.managerusaha.app.viewmodel.riwayatViewModel
 
 class RiwayatFragment : Fragment() {
+
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: RiwayatAdapter
+    private lateinit var riwayatAdapter: RiwayatAdapter
     private val riwayatViewModel: riwayatViewModel by viewModels()
-    private val barangViewModel: BarangViewModel by viewModels()
+
     private lateinit var searchInput: TextInputEditText
     private lateinit var searchWrap: TextInputLayout
     private lateinit var spinnerCategory: Spinner
 
+    private var originalData: List<RiwayatWithBarang> = listOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         return inflater.inflate(R.layout.fragment_riwayat, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkStatusBar()
+
+        // Inisialisasi View
+        recyclerView = view.findViewById(R.id.recycler_riwayat)
         searchInput = view.findViewById(R.id.search_in)
         searchWrap = view.findViewById(R.id.search_wrap)
         spinnerCategory = view.findViewById(R.id.category_spinner)
-        recyclerView = view.findViewById(R.id.recycler_riwayat)
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = RiwayatAdapter(emptyList())
-        recyclerView.adapter = adapter
-        barangViewModel.allBarang.observe(viewLifecycleOwner) { barangList ->
-            riwayatViewModel.allriwayat.observe(viewLifecycleOwner) { riwayatList ->
-                val combined = riwayatList.mapNotNull { r ->
-                    val barang = barangList.find { it.id == r.barangId }
-                    barang?.let {
-                        RiwayatWithNama(
-                            id = r.id,
-                            barangId = r.barangId,
-                            namaBarang = it.nama,
-                            tanggal = r.tanggal,
-                            jumlah = r.jumlah,
-                            tipe = r.tipe
-                        )
-                    }
-                }
-                adapter.updateData(combined)
-            }
+        riwayatAdapter = RiwayatAdapter(emptyList())
+        recyclerView.adapter = riwayatAdapter
+
+        // Observasi data
+        riwayatViewModel.allRiwayatWithBarang.observe(viewLifecycleOwner) { list ->
+            originalData = list
+            riwayatAdapter.updateData(list)
         }
 
-        setdefault()
+        setupFilterUI()
     }
 
-
-    private fun setdefault() {
+    private fun setupFilterUI() {
         val categories = listOf("All", "Audit", "Keluar", "Masuk")
-        val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
-        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCategory.adapter = categoryAdapter
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategory.adapter = adapter
 
         searchWrap.setStartIconOnClickListener {
-            val searchText = searchInput.text.toString().trim()
+            val keyword = searchInput.text.toString().trim().lowercase()
             val selectedCategory = spinnerCategory.selectedItem.toString()
 
-            Toast.makeText(requireContext(), "Cari: $searchText di $selectedCategory", Toast.LENGTH_SHORT).show()
+            val filtered = originalData.filter { riwayat ->
+                val matchNama = riwayat.nama.lowercase().contains(keyword)
+                val matchKategori = when (selectedCategory) {
+                    "All" -> true
+                    else -> riwayat.tipe.equals(selectedCategory, ignoreCase = true)
+                }
+                matchNama && matchKategori
+            }
+
+
+            riwayatAdapter.updateData(filtered)
+
+            Toast.makeText(
+                requireContext(),
+                "Menampilkan ${filtered.size} hasil untuk \"$keyword\" di kategori \"$selectedCategory\"",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

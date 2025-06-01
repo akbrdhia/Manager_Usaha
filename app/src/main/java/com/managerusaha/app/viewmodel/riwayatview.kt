@@ -7,6 +7,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.managerusaha.app.room.AppDatabase
 import com.managerusaha.app.room.entity.Riwayat
+import com.managerusaha.app.utills.model.RiwayatWithBarang
 import kotlinx.coroutines.launch
 
 class riwayatViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,4 +24,7 @@ class riwayatViewModel(application: Application) : AndroidViewModel(application)
             riwayatDao.insert(riwayat)
         }
     }
+
+    val allRiwayatWithBarang: LiveData<List<RiwayatWithBarang>> = riwayatDao.getRiwayatWithBarang()
 }
+

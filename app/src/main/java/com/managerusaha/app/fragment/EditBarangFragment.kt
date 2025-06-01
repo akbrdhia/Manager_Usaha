@@ -79,6 +79,7 @@ class EditBarangFragment : Fragment() {
         etHargaJual = view.findViewById(R.id.et_harga_jual)
         categorySpinner = view.findViewById(R.id.category_spinner)
         ivBarang = view.findViewById(R.id.iv_barang)
+        groub_back = view.findViewById(R.id.group_back)
     }
 
     private fun setuplistener() {
