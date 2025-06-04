@@ -16,22 +16,51 @@ import com.managerusaha.app.utills.model.KategoryExpand
 import java.text.NumberFormat
 import java.util.Locale
 
+
 class KategoriAdapter(
-    private val kategoriList: MutableList<KategoryExpand>,
+    private var kategoriList: MutableList<KategoryExpand>,
     private val onBarangClick: (Barang) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    sealed class ListItem {
+        data class Category(val nama: String, val isExpanded: Boolean) : ListItem()
+        data class ItemBarang(val barang: Barang) : ListItem()
+    }
 
     private val VIEW_TYPE_KATEGORI = 0
     private val VIEW_TYPE_BARANG = 1
 
+    // Daftar flattened yang di‐rebuild setiap kali kategoriList berubah atau expand/collapse:
+    private var flattenedList: MutableList<ListItem> = mutableListOf()
+
+    init {
+        buildFlattenedList()
+    }
+
+    /** Membangun ulang flattenedList sesuai state kategoriList saat ini */
+    private fun buildFlattenedList() {
+        flattenedList.clear()
+        for (kategori in kategoriList) {
+            // Tambah header kategori
+            flattenedList.add(ListItem.Category(kategori.nama, kategori.isExpanded))
+            if (kategori.isExpanded) {
+                // Jika expanded, tambahkan setiap barang di bawahnya
+                for (barang in kategori.barangList) {
+                    flattenedList.add(ListItem.ItemBarang(barang))
+                }
+            }
+        }
+    }
+
     override fun getItemViewType(position: Int): Int {
-        val item = getItem(position)
-        return if (item is KategoryExpand) VIEW_TYPE_KATEGORI else VIEW_TYPE_BARANG
+        return when (flattenedList[position]) {
+            is ListItem.Category -> VIEW_TYPE_KATEGORI
+            is ListItem.ItemBarang -> VIEW_TYPE_BARANG
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        Log.d("KategoriAdapter", "Creating ViewHolder for type: $viewType")
         return if (viewType == VIEW_TYPE_KATEGORI) {
             val view = inflater.inflate(R.layout.item_kategori, parent, false)
             KategoriViewHolder(view)
@@ -41,95 +70,82 @@ class KategoriAdapter(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = getItem(position)
-        Log.d("KategoriAdapter", "Binding position: $position, item: $item, holder type: ${holder.javaClass.simpleName}")
-
-        if (holder is KategoriViewHolder && item is KategoryExpand) {
-            holder.bind(item)
-            Log.d("KategoriAdapter", "Bound kategori: ${item.nama}")
-        } else if (holder is BarangViewHolder && item is Barang) {
-            holder.bind(item)
-            Log.d("KategoriAdapter", "Bound barang: ${item.nama}")
+        when (val item = flattenedList[position]) {
+            is ListItem.Category -> {
+                (holder as KategoriViewHolder).bind(item, position)
+            }
+            is ListItem.ItemBarang -> {
+                (holder as BarangViewHolder).bind(item.barang)
+            }
         }
     }
 
-    override fun getItemCount(): Int {
-        val count = kategoriList.sumOf { if (it.isExpanded) it.barangList.size + 1 else 1 }
-        Log.d("KategoriAdapter", "Item count: $count")
-        return count
-    }
+    override fun getItemCount(): Int = flattenedList.size
 
-    private fun getItem(position: Int): Any {
-         var count = 0
-        for (kategori in kategoriList) {
-            if (count == position) {
-                Log.d("KategoriAdapter", "Getting kategori at position $position: ${kategori.nama}")
-                return kategori
-            }
-            count++
-            if (kategori.isExpanded) {
-                if (position < count + kategori.barangList.size) {
-                    val barang = kategori.barangList[position - count]
-                    Log.d("KategoriAdapter", "Getting barang at position $position: ${barang.nama}")
-                    return barang
-                }
-                count += kategori.barangList.size
-            }
-        }
-        throw IllegalStateException("Invalid position")
+    /**
+     * Memperbarui seluruh kategoriList dengan list baru, lalu rebuild flattenedList
+     * dan notifikasi agar UI ter‐refresh sekali.
+     */
+    fun updateData(newKategoriList: List<KategoryExpand>) {
+        kategoriList.clear()
+        kategoriList.addAll(newKategoriList)
+        buildFlattenedList()
+        notifyDataSetChanged()
     }
 
     inner class KategoriViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val kategoriText: TextView = view.findViewById(R.id.tvKategori)
         private val iconExpand: ImageView = view.findViewById(R.id.ivExpand)
 
-        fun bind(kategori: KategoryExpand) {
-            Log.d("KategoriViewHolder", "Binding kategori: ${kategori.nama}")
-            kategoriText.text = kategori.nama
-            iconExpand.setImageResource(if (kategori.isExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand)
+        fun bind(item: ListItem.Category, position: Int) {
+            kategoriText.text = item.nama
+            iconExpand.setImageResource(
+                if (item.isExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand
+            )
 
             itemView.setOnClickListener {
-                Log.d("KategoriViewHolder", "Kategori clicked: ${kategori.nama}")
-                kategori.isExpanded = !kategori.isExpanded
-                notifyDataSetChanged()
+                // Toggle isExpanded pada KategoryExpand yang sesuai nama-nya
+                val idx = kategoriList.indexOfFirst { it.nama == item.nama }
+                if (idx != -1) {
+                    val kategoriObj = kategoriList[idx]
+                    kategoriObj.isExpanded = !kategoriObj.isExpanded
+                    buildFlattenedList()
+                    notifyDataSetChanged()
+                }
             }
         }
     }
 
     inner class BarangViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            private val barangText: TextView = view.findViewById(R.id.tvBarang)
-            private val stoktext: TextView = view.findViewById(R.id.tv_stok)
-            private val hargatext : TextView = view.findViewById(R.id.tvHarga)
-            private val ivbarang: ImageView = view.findViewById(R.id.iv_gambar)
+        private val barangText: TextView = view.findViewById(R.id.tvBarang)
+        private val stokText: TextView = view.findViewById(R.id.tv_stok)
+        private val hargaText: TextView = view.findViewById(R.id.tvHarga)
+        private val ivBarang: ImageView = view.findViewById(R.id.iv_gambar)
 
-            @RequiresApi(Build.VERSION_CODES.P)
-            fun bind(barang: Barang) {
-                Log.d("BarangViewHolder", "Binding barang: ${barang.nama}")
-                if (barang.gambarPath != null) {
-                    try {
-                        val source = ImageDecoder.createSource(ivbarang.context.contentResolver, android.net.Uri.parse(barang.gambarPath))
-                        val bitmap = ImageDecoder.decodeBitmap(source)
-                        ivbarang.setImageBitmap(bitmap)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                } else {
-                    Log.d("BarangViewHolder", "No gambar found for barang: ${barang.nama}")
+        @RequiresApi(Build.VERSION_CODES.P)
+        fun bind(barang: Barang) {
+            barangText.text = barang.nama
+            stokText.text = barang.stok.toString()
+            val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+            formatRupiah.maximumFractionDigits = 0
+            hargaText.text = formatRupiah.format(barang.harga).replace("Rp", "Rp ")
+
+            if (!barang.gambarPath.isNullOrEmpty()) {
+                try {
+                    val source = ImageDecoder.createSource(ivBarang.context.contentResolver, android.net.Uri.parse(barang.gambarPath))
+                    val bitmap = ImageDecoder.decodeBitmap(source)
+                    ivBarang.setImageBitmap(bitmap)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
+            } else {
+            }
 
-                barangText.text = barang.nama
-                stoktext.text = barang.stok.toString()
-                val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-                formatRupiah.maximumFractionDigits = 0
-                hargatext.text = formatRupiah.format(barang.harga).replace("Rp", "Rp ")
-
-
-
-                itemView.setOnClickListener {
-                    Log.d("BarangViewHolder", "Barang clicked: ${barang.nama}")
-                    onBarangClick(barang)
-                }
+            itemView.setOnClickListener {
+                onBarangClick(barang)
             }
         }
+    }
 }

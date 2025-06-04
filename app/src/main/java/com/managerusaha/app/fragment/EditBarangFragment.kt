@@ -1,6 +1,6 @@
 package com.managerusaha.app.fragment
 
-import TmpbarangFragment
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -23,18 +25,24 @@ import java.util.Locale
 
 class EditBarangFragment : Fragment() {
     private var barangId: Int = -1
-    private lateinit var viewModel: BarangViewModel
+    private lateinit var barangViewModel: BarangViewModel
     private val kategoriViewModel: KategoriViewModel by viewModels()
+    private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
+    // * Views
     private lateinit var etNama: EditText
     private lateinit var etKuantitas: EditText
     private lateinit var etHargaBeli: EditText
     private lateinit var etHargaJual: EditText
-    private lateinit var categorySpinner: Spinner
+    private lateinit var spinnerKategori: Spinner
     private lateinit var ivBarang: ImageView
-    private lateinit var groub_back : FrameLayout
-    private var kategoriNamaDariBarang: String? = null
+    private lateinit var groupBack: FrameLayout
+
+    // * State
     private var currentBarang: Barang? = null
+    private var kategoriNamaDariBarang: String? = null
+    private var currentImageUri: Uri? = null
+    private var selectedImagePath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,58 +52,52 @@ class EditBarangFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_edit_barang, container, false)
-    }
+    ): View = inflater.inflate(R.layout.fragment_edit_barang, container, false)
 
+    @Suppress("UnsafeExperimentalUsageError")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[BarangViewModel::class.java]
-        inisalisasi(view)
-        setupFormatHarga()
-        setupKategoriSpinner()
-        setuplistener()
+        barangViewModel = ViewModelProvider(this)[BarangViewModel::class.java]
+        initViews(view)
+        configureHargaFormatter()
+        setupImagePicker()
+        configureKategoriSpinner()
+        configureListeners()
 
-        viewModel.getBarangById(barangId).observe(viewLifecycleOwner) { barang ->
+
+        // * Observe barang data by ID
+        barangViewModel.getBarangById(barangId).observe(viewLifecycleOwner) { barang ->
             barang?.let {
                 currentBarang = it
-                etNama.setText(it.nama)
-                etKuantitas.setText(it.stok.toString())
-                etHargaBeli.setText(formatRupiah(it.modal))
-                etHargaJual.setText(formatRupiah(it.harga))
-                kategoriNamaDariBarang = it.kategori
-                it.gambarPath?.let { path ->
-                    ivBarang.setImageURI(Uri.parse(path))
-                }
-                updateSelectedSpinnerKategori()
+                populateFields(it)
             }
         }
     }
 
-    private fun inisalisasi(view: View) {
-        etNama = view.findViewById(R.id.et_nama)
-        etKuantitas = view.findViewById(R.id.et_kuantitas)
-        etHargaBeli = view.findViewById(R.id.et_harga_beli)
-        etHargaJual = view.findViewById(R.id.et_harga_jual)
-        categorySpinner = view.findViewById(R.id.category_spinner)
-        ivBarang = view.findViewById(R.id.iv_barang)
-        groub_back = view.findViewById(R.id.group_back)
+    private fun initViews(root: View) {
+        etNama = root.findViewById(R.id.et_nama)
+        etKuantitas = root.findViewById(R.id.et_kuantitas)
+        etHargaBeli = root.findViewById(R.id.et_harga_beli)
+        etHargaJual = root.findViewById(R.id.et_harga_jual)
+        spinnerKategori = root.findViewById(R.id.category_spinner)
+        ivBarang = root.findViewById(R.id.iv_barang)
+        groupBack = root.findViewById(R.id.group_back)
     }
 
-    private fun setuplistener() {
-        val btnTambah = view?.findViewById<Button>(R.id.btn_tambah)
-        val btnHapus = view?.findViewById<Button>(R.id.btn_hapus)
-        groub_back.setOnClickListener {
-            (activity as MainActivity).replaceFragment(StokFragment(), "Stok")
-        }
-        btnHapus?.setOnClickListener {
-            currentBarang?.let { barang ->
-                showDeleteConfirmation(barang)
-            }
+    private fun configureListeners() {
+        // * Tombol kembali
+        groupBack.setOnClickListener {
+            (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
         }
 
-        btnTambah?.setOnClickListener {
-            UpdateBarang()
+        // * Tombol Hapus
+        view?.findViewById<Button>(R.id.btn_hapus)?.setOnClickListener {
+            currentBarang?.let { showDeleteConfirmation(it) }
+        }
+
+        // * Tombol Simpan (Update)
+        view?.findViewById<Button>(R.id.btn_tambah)?.setOnClickListener {
+            updateBarang()
         }
     }
 
@@ -104,100 +106,145 @@ class EditBarangFragment : Fragment() {
             .setTitle("Hapus Barang")
             .setMessage("Yakin ingin menghapus barang \"${barang.nama}\"?")
             .setPositiveButton("Hapus") { _, _ ->
-                viewModel.deleteBarang(barang)
+                barangViewModel.deleteBarang(barang)
                 Toast.makeText(requireContext(), "Barang dihapus", Toast.LENGTH_SHORT).show()
-                (activity as MainActivity).replaceFragment(StokFragment(), "BarangList")
+                (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
             }
             .setNegativeButton("Batal", null)
             .show()
     }
 
-    private fun setupFormatHarga() {
+    private fun configureHargaFormatter() {
         setupRupiahFormatter(etHargaBeli)
         setupRupiahFormatter(etHargaJual)
-    }
-
-    private fun updateSelectedSpinnerKategori() {
-        val targetKategori = kategoriNamaDariBarang ?: return
-        val adapter = categorySpinner.adapter ?: return
-
-        for (i in 0 until adapter.count) {
-            if (adapter.getItem(i).toString() == targetKategori) {
-                categorySpinner.setSelection(i)
-                break
-            }
-        }
     }
 
     private fun setupRupiahFormatter(editText: EditText) {
         editText.addTextChangedListener(object : TextWatcher {
             private var current = ""
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString() != current) {
-                    editText.removeTextChangedListener(this)
+                val input = s.toString()
+                if (input == current) return
+                editText.removeTextChangedListener(this)
 
-                    val cleanString = s.toString().replace("[Rp,.\\s]".toRegex(), "")
-                    val parsed = cleanString.toDoubleOrNull() ?: 0.0
-                    val formatted = formatRupiah(parsed)
+                val cleanString = input.replace("[Rp,.\\s]".toRegex(), "")
+                val parsed = cleanString.toDoubleOrNull() ?: 0.0
+                val formatted = formatRupiah(parsed)
 
-                    current = formatted
-                    editText.setText(formatted)
-                    editText.setSelection(formatted.length)
-
-                    editText.addTextChangedListener(this)
-                }
+                current = formatted
+                editText.setText(formatted)
+                editText.setSelection(formatted.length)
+                editText.addTextChangedListener(this)
             }
         })
     }
 
     private fun formatRupiah(number: Double): String {
         val localeID = Locale("in", "ID")
-        val format = NumberFormat.getCurrencyInstance(localeID)
-        return format.format(number).replace(",00", "")
+        val formatter = NumberFormat.getCurrencyInstance(localeID)
+        return formatter.format(number).replace(",00", "")
     }
 
-    private fun setupKategoriSpinner() {
-        kategoriViewModel.allKategori.observe(viewLifecycleOwner) { allKategori ->
-            val categories = mutableListOf("Lainnya")
-            categories.addAll(allKategori.map { it.nama })
+    private fun configureKategoriSpinner() {
+        kategoriViewModel.allKategori.observe(viewLifecycleOwner) { daftarKategori ->
+            val options = mutableListOf("Lainnya")
+            options.addAll(daftarKategori.map { it.nama })
 
-            val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
-            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            categorySpinner.adapter = categoryAdapter
-
-            updateSelectedSpinnerKategori()
+            val adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                options
+            ).also {
+                it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+            spinnerKategori.adapter = adapter
+            // Pilih kategori yg sesuai data awal
+            selectCurrentKategori()
         }
     }
 
+    private fun selectCurrentKategori() {
+        val namaKategori = kategoriNamaDariBarang ?: return
+        val adapter = spinnerKategori.adapter as? ArrayAdapter<*>
+        adapter?.let {
+            for (i in 0 until it.count) {
+                if (it.getItem(i).toString() == namaKategori) {
+                    spinnerKategori.setSelection(i)
+                    break
+                }
+            }
+        }
+    }
+
+    private fun setupImagePicker() {
+        pickImageLauncher =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let {
+                    try { // ! Grant permiss kalo blm punya
+                        requireContext().contentResolver.takePersistableUriPermission(
+                            it,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        )
+                    } catch (e: SecurityException) {
+                        e.printStackTrace()
+                    }
+
+                    ivBarang.setImageURI(it)
+                    selectedImagePath = it.toString()
+                }
+            }
+    }
+
+    // ? liat nanti kalo mau pake ini
     private fun getRawDouble(input: String): Double {
         val cleanString = input.replace("[^0-9]".toRegex(), "")
         return cleanString.toDoubleOrNull() ?: 0.0
     }
 
-    private fun UpdateBarang() {
+    private fun populateFields(barang: Barang) {
+        etNama.setText(barang.nama)
+        etKuantitas.setText(barang.stok.toString())
+        etHargaBeli.setText(formatRupiah(barang.modal))
+        etHargaJual.setText(formatRupiah(barang.harga))
+
+        kategoriNamaDariBarang = barang.kategori
+        selectCurrentKategori()
+
+        barang.gambarPath?.let { path ->
+            try {
+                ivBarang.setImageURI(Uri.parse(path))
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+                Toast.makeText(requireContext(), "Gagal menampilkan gambar, izin ditolak", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    private fun updateBarang() {
         val nama = etNama.text.toString().trim()
         val kuantitas = etKuantitas.text.toString().toIntOrNull() ?: 0
-        val hargaBeli = getRawDouble(etHargaBeli.text.toString())
-        val hargaJual = getRawDouble(etHargaJual.text.toString())
-        val kategori = categorySpinner.selectedItem.toString()
+        val hargaBeli = etHargaBeli.text.toString()
+            .replace("[^0-9]".toRegex(), "")
+            .toDoubleOrNull() ?: 0.0
+        val hargaJual = etHargaJual.text.toString()
+            .replace("[^0-9]".toRegex(), "")
+            .toDoubleOrNull() ?: 0.0
+        val kategori = spinnerKategori.selectedItem.toString()
         val gambarPath = currentBarang?.gambarPath
 
         if (nama.isEmpty()) {
             Toast.makeText(requireContext(), "Nama tidak boleh kosong", Toast.LENGTH_SHORT).show()
             return
         }
-
         if (currentBarang == null) {
             Toast.makeText(requireContext(), "Barang tidak ditemukan", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val updatedBarang = currentBarang!!.copy(
+        val updated = currentBarang!!.copy(
             nama = nama,
             stok = kuantitas,
             modal = hargaBeli,
@@ -205,10 +252,8 @@ class EditBarangFragment : Fragment() {
             kategori = kategori,
             gambarPath = gambarPath
         )
-
-        viewModel.updateBarang(updatedBarang)
-        Toast.makeText(requireContext(), "Barang berhasil diupdate", Toast.LENGTH_SHORT)
-
+        barangViewModel.updateBarang(updated)
+        Toast.makeText(requireContext(), "Barang berhasil diupdate", Toast.LENGTH_SHORT).show()
         (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
     }
 }
