@@ -30,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "managerusaha_db"
                 )
-                    .fallbackToDestructiveMigration() // Hapus database kalau ada perubahan schema
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 Log.d("DB_CHECK", "Database berhasil dibuat: ${instance.openHelper.databaseName}")

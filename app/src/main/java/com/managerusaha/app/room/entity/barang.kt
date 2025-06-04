@@ -11,5 +11,6 @@ data class Barang(
     val stok: Int,
     val harga: Double,
     val modal: Double,
+    val barcode: String? = null,
     val gambarPath: String? = null
 )
