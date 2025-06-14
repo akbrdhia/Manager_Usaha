@@ -12,7 +12,7 @@ import com.managerusaha.app.room.entity.Barang
 import com.managerusaha.app.room.entity.Kategori
 import com.managerusaha.app.room.entity.Riwayat
 
-@Database(entities = [Barang::class, Kategori::class, Riwayat::class], version = 1, exportSchema = false)
+@Database(entities = [Barang::class, Kategori::class, Riwayat::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun barangDao(): BarangDao
     abstract fun kategoriDao(): KategoriDao
