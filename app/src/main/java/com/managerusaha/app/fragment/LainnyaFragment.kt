@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.compose.animation.core.Easing
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.BarChart
@@ -14,12 +15,16 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
+import com.managerusaha.app.fragment.minor.StokMasukkFragment
+import com.managerusaha.app.fragment.minor.tentangFragment
 
 
 class LainnyaFragment : Fragment() {
 
     private lateinit var barChart: BarChart
+    private lateinit var btn_tentang : Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,30 +48,28 @@ class LainnyaFragment : Fragment() {
     }
 
     private fun setupclicklistener() {
-
+        btn_tentang.setOnClickListener {
+            (activity as MainActivity).replaceFragment(tentangFragment(), "TENTANG")
+        }
     }
 
     private fun setupbarchart(dummynumber: Int) {
         if (dummynumber == 1) {
             val barangList = listOf("Susu", "Roti", "Kopi")
             val jumlahTerjualList = listOf(12f, 8f, 5f)
-
 // Bikin BarEntry
             val entries = ArrayList<BarEntry>()
             for (i in barangList.indices) {
                 entries.add(BarEntry(i.toFloat(), jumlahTerjualList[i]))
             }
-
 // Dataset dan Data
             val dataSet = BarDataSet(entries, "Barang Terjual")
             dataSet.color = Color.parseColor("#3F51B5")
             dataSet.valueTextColor = Color.BLACK
             dataSet.valueTextSize = 14f
-
             val barData = BarData(dataSet)
             barData.barWidth = 0.5f
             barChart.data = barData
-
 // Styling BarChart
             barChart.setBackgroundColor(Color.WHITE)
             barChart.setDrawGridBackground(false)
@@ -76,7 +79,6 @@ class LainnyaFragment : Fragment() {
             barChart.axisLeft.setDrawGridLines(false)
             barChart.axisLeft.textColor = Color.BLACK
             barChart.axisLeft.textSize = 12f
-
 // XAxis pakai ValueFormatter
             val xAxis = barChart.xAxis
             xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -86,14 +88,12 @@ class LainnyaFragment : Fragment() {
             xAxis.textSize = 12f
             xAxis.granularity = 1f
             xAxis.setCenterAxisLabels(false)
-            xAxis.valueFormatter = IndexAxisValueFormatter(barangList) // 🔥 ini buat nampilin nama barang
-
+            xAxis.valueFormatter =
+                IndexAxisValueFormatter(barangList) // 🔥 ini buat nampilin nama barang
 // Legend
             barChart.legend.isEnabled = false
-
 // Animasi
             barChart.animateY(1000)
-
 // Refresh chart
             barChart.invalidate()
 
@@ -104,6 +104,7 @@ class LainnyaFragment : Fragment() {
 
     private fun inisialisasi(view: View) {
         barChart = view.findViewById(R.id.barChart)
+        btn_tentang = view.findViewById(R.id.btn_tentang_aplikasi)
     }
 
     private fun checkStatusBar() {

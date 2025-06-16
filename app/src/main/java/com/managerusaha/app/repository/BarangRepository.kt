@@ -5,6 +5,7 @@ import com.managerusaha.app.room.dao.BarangDao
 import com.managerusaha.app.room.entity.Barang
 import android.app.Application
 import androidx.lifecycle.LiveData
+import com.managerusaha.app.utills.model.TopBarang
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -48,4 +49,13 @@ class BarangRepository(application: Application) {
     suspend fun findByBarcode(code: String): Barang? =
         barangDao.findByBarcode(code)
 
+    private val riwayatDao = AppDatabase
+        .getDatabase(application)
+        .riwayatDao()
+
+    /** Di sini kita lakukan switch ke IO thread */
+    suspend fun getTop6TerlarisSejak(startMillis: Long): List<TopBarang> =
+        withContext(Dispatchers.IO) {
+            riwayatDao.getTop6Terlaris(startMillis)
+        }
 } 

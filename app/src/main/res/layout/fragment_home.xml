@@ -250,7 +250,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:text="@string/bintang"
-            android:textColor="@color/black"
+            android:textColor="#0abf00"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/a1" />
@@ -272,7 +272,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:text="@string/bintang"
-            android:textColor="@color/black"
+            android:textColor="#bf0000"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/a2"
             app:layout_constraintTop_toBottomOf="@+id/a2" />

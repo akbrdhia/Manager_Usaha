@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.managerusaha.app.room.entity.Riwayat
 import com.managerusaha.app.utills.model.RiwayatWithBarang
+import com.managerusaha.app.utills.model.TopBarang
 
 @Dao
 interface RiwayatDao {
@@ -56,4 +57,19 @@ interface RiwayatDao {
       WHERE r.tipe = 'KELUAR' AND r.tanggal BETWEEN :start AND :end
     """)
     suspend fun getTotalUntungBulanIni(start: Long, end: Long): Double?
+
+    @Query("""
+    SELECT b.id AS id,
+           b.nama AS nama,
+           b.gambarPath AS gambarPath,
+           SUM(r.jumlah) AS total
+    FROM riwayat r
+    JOIN barang b ON b.id=r.barangId
+    WHERE r.tanggal >= :startMillis
+      AND r.tipe='KELUAR'
+    GROUP BY b.id
+    ORDER BY total DESC
+    LIMIT 6                                                                           
+  """)
+    suspend fun getTop6Terlaris(startMillis: Long): List<TopBarang>
 }
