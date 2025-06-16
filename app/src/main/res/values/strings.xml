@@ -48,4 +48,14 @@
     <string name="versi">Versi</string>
     <string name="keb_priv">Kebijakan Privasi</string>
     <string name="data_bulan_ini">Data Bulan Ini</string>
+    <string name="hubungi_developer">Hubungi Developer</string>
+    <string name="_1_menambahkan_barang">1. Menambahkan barang</string>
+    <string name="_1P">Ke halaman barang lalu click tombol tambah barang, dihalaman barang isi semua yang yang tertera dan jika belum buat kategori click plus (+) untuk tambahkan kategori.</string>
+    <string name="_2_menambah_stok_barang">2. Menambah Stok barang</string>
+    <string name="_2P">Ke halaman beranda lalu click tombol stok masuk, pilih barang yang anda ingin tambah stoknyasetelah selesai edit click tombol ok.</string>
+    <string name="_3_mengurangi_stok_barang">3. Mengurangi Stok barang</string>
+    <string name="_3P">Ke halaman beranda lalu click tombol stok keluar, pilih barang yang anda ingin kurangi stoknya, setelah selesai edit click tombol ok.</string>
+    <string name="_4_mengedit_barang">4. Mengedit barang</string>
+    <string name="_4P">Ke halaman barang lalu click barang yang anda ingin edit, setelah selesai edit click tombol ok</string>
+    <string name="_5P">Ke halaman barang lalu click (-) yang ada di kiri barang yang anda ingin hapus, setelah itu click tombol ok</string>
 </resources>
