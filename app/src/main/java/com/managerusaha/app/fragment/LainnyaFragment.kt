@@ -39,6 +39,11 @@ class LainnyaFragment : Fragment() {
     private fun Setup() {
         checkStatusBar()
         setupbarchart(1)
+        setupclicklistener()
+    }
+
+    private fun setupclicklistener() {
+
     }
 
     private fun setupbarchart(dummynumber: Int) {

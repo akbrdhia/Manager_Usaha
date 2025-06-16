@@ -219,7 +219,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="23dp"
-            android:text="@string/data_hari_ini"
+            android:text="@string/data_bulan_ini"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -245,7 +245,7 @@
             app:layout_constraintTop_toBottomOf="@+id/line" />
 
         <TextView
-            android:id="@+id/b1"
+            android:id="@+id/tvstokmasuk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
@@ -267,7 +267,7 @@
             app:layout_constraintTop_toBottomOf="@+id/line" />
 
         <TextView
-            android:id="@+id/b2"
+            android:id="@+id/tvstokkeluar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
@@ -288,7 +288,7 @@
             app:layout_constraintTop_toBottomOf="@+id/a1" />
 
         <TextView
-            android:id="@+id/b3"
+            android:id="@+id/tvomset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/bintang"
@@ -308,7 +308,7 @@
             app:layout_constraintTop_toBottomOf="@+id/a2" />
 
         <TextView
-            android:id="@+id/b4"
+            android:id="@+id/tvuntung"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/bintang"

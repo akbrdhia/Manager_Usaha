@@ -176,24 +176,50 @@ class EditBarangFragment : Fragment() {
         btnHapus.setOnClickListener { currentBarang?.let { confirmDelete(it) } }
     }
 
+    private fun formatRupiah(value: Double): String {
+        val fmt = NumberFormat.getCurrencyInstance(Locale("id","ID"))
+        fmt.maximumFractionDigits = 0
+        return fmt.format(value).replace("Rp", "Rp ")
+    }
+
+
     private fun observeBarang() {
         barangViewModel.getBarangById(barangId).observe(viewLifecycleOwner) { b ->
-            if (b == null) return@observe
+            b ?: return@observe
+
             currentBarang = b
-            // load into formVm
+
+            // 1) Simpan semua field ke formVm (tanpa mengisi harga dengan toString())
             formVm.apply {
-                nama = b.nama
-                stok = b.stok.toString()
-                hargaJual = b.harga.toString()
-                hargaModal = b.modal.toString()
-                kategori = b.kategori ?: ""
-                barcode = b.barcode ?: ""
+                nama       = b.nama
+                stok       = b.stok.toString()
+                kategori   = b.kategori ?: "Lainnya"
+                barcode    = b.barcode ?: ""
                 gambarPath = b.gambarPath
             }
-            // restore into UI
-            restoreFormState(spinnerKategori.adapter as ArrayAdapter<String>)
+
+            // 2) Format harga & modal
+            val fmtHarga = formatRupiah(b.harga)   // misal "Rp.3.000"
+            val fmtModal = formatRupiah(b.modal)
+
+            // 3) Tampilkan di UI
+            etNama.setText(formVm.nama)
+            etStok.setText(formVm.stok)
+            etHarga.setText(fmtHarga)
+            etModal.setText(fmtModal)
+            etHasilScan.setText(formVm.barcode)
+            formVm.hargaJual  = fmtHarga
+            formVm.hargaModal = fmtModal
+
+            formVm.gambarPath?.let { ivBarang.setImageURI(Uri.parse(it)) }
+
+            // 4) Restore spinner
+            val adapter = spinnerKategori.adapter as ArrayAdapter<String>
+            val idx = adapter.getPosition(formVm.kategori)
+            spinnerKategori.setSelection(idx.coerceAtLeast(0))
         }
     }
+
 
     private fun restoreFormState(adapter: ArrayAdapter<String>) {
         etNama.setText(formVm.nama)

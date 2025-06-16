@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.managerusaha.app.R
 import com.managerusaha.app.utills.model.RiwayatWithBarang
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,7 +43,11 @@ class RiwayatAdapter(private var riwayatList: List<RiwayatWithBarang>) :
             "keluar" -> item.modal * item.jumlah
             else     -> 0.0
         }
-        holder.tvHarga.text = "Rp %.0f".format(totalUang)
+        val nf = NumberFormat.getCurrencyInstance(Locale("id","ID")).apply {
+            maximumFractionDigits = 0
+        }
+        holder.tvHarga.text = nf.format(totalUang)
+
 
         if (!item.gambarPath.isNullOrEmpty()) {
             try {
