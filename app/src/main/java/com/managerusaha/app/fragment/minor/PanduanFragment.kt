@@ -44,4 +44,4 @@ class PanduanFragment : Fragment() {
         (activity as MainActivity).replaceFragment(LainnyaFragment(), "LAINNYA")
     }
 }
-}
+
