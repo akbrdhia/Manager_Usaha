@@ -58,4 +58,6 @@ class BarangRepository(application: Application) {
         withContext(Dispatchers.IO) {
             riwayatDao.getTop6Terlaris(startMillis)
         }
+    suspend fun getTopTerlarisSejak(startMillis: Long, limit: Int = 3) =
+        riwayatDao.getTopTerlaris(startMillis, limit)
 } 

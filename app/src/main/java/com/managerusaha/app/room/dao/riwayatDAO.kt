@@ -5,6 +5,7 @@ import androidx.room.*
 import com.managerusaha.app.room.entity.Riwayat
 import com.managerusaha.app.utills.model.RiwayatWithBarang
 import com.managerusaha.app.utills.model.TopBarang
+import com.managerusaha.app.utills.model.TopBarang3
 
 @Dao
 interface RiwayatDao {
@@ -72,4 +73,18 @@ interface RiwayatDao {
     LIMIT 6                                                                           
   """)
     suspend fun getTop6Terlaris(startMillis: Long): List<TopBarang>
+
+    @Query("""
+  SELECT b.nama           AS nama,
+         SUM(r.jumlah)    AS total
+  FROM riwayat r
+  JOIN barang b ON r.barangId = b.id
+  WHERE r.tanggal >= :startMillis
+    AND r.tipe = 'KELUAR'
+  GROUP BY b.id
+  ORDER BY total DESC
+  LIMIT :limit
+""")
+    suspend fun getTopTerlaris(startMillis: Long, limit: Int): List<TopBarang3>
+
 }

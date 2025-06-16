@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.managerusaha.app.repository.BarangRepository
 import com.managerusaha.app.utills.model.TopBarang
+import com.managerusaha.app.utills.model.TopBarang3
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -28,6 +29,45 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun getStartOfMonthMillis(): Long {
+        return Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_MONTH, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
+
+    private val _top3 = MutableLiveData<List<TopBarang3>>()
+    val top3: LiveData<List<TopBarang3>> = _top3
+
+    fun loadTop3(startMillis: Long) {
+        viewModelScope.launch {
+            val data = repo.getTopTerlarisSejak(startMillis, 3)
+            _top3.postValue(data)
+        }
+    }
+
+    fun startOfToday(): Long {
+        return Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
+
+    fun startOfWeek(): Long {
+        return Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_WEEK, firstDayOfWeek) // biasanya Minggu atau Senin tergantung lokal
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
+
+    fun startOfMonth(): Long {
         return Calendar.getInstance().apply {
             set(Calendar.DAY_OF_MONTH, 1)
             set(Calendar.HOUR_OF_DAY, 0)

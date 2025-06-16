@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.compose.animation.core.Easing
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -19,12 +20,18 @@ import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
 import com.managerusaha.app.fragment.minor.StokMasukkFragment
 import com.managerusaha.app.fragment.minor.tentangFragment
+import com.managerusaha.app.viewmodel.DashboardViewModel
 
 
 class LainnyaFragment : Fragment() {
 
+    private val vm: DashboardViewModel by viewModels()
+
     private lateinit var barChart: BarChart
     private lateinit var btn_tentang : Button
+    private lateinit var btn_hari : Button
+    private lateinit var btn_minggu : Button
+    private lateinit var btn_bulan : Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +51,28 @@ class LainnyaFragment : Fragment() {
     private fun Setup() {
         checkStatusBar()
         setupbarchart(1)
+        setupFilterButtons()
+        subscribeTop3()
+        vm.loadTop3(vm.startOfToday())
+
         setupclicklistener()
+    }
+
+    private fun subscribeTop3() {
+        vm.top3.observe(viewLifecycleOwner) { list ->
+            // prepare entries for at most 3 items
+            val names  = list.map { it.nama }
+            val values = list.map { it.total.toFloat() }
+            updateChart(names, values)
+        }
+
+    }
+
+    private fun setupFilterButtons() {
+        btn_hari.setOnClickListener  { vm.loadTop3(vm.startOfToday()) }
+        btn_minggu.setOnClickListener{ vm.loadTop3(vm.startOfWeek()) }
+        btn_bulan.setOnClickListener { vm.loadTop3(vm.startOfMonth()) }
+
     }
 
     private fun setupclicklistener() {
@@ -54,57 +82,68 @@ class LainnyaFragment : Fragment() {
     }
 
     private fun setupbarchart(dummynumber: Int) {
-        if (dummynumber == 1) {
-            val barangList = listOf("Susu", "Roti", "Kopi")
-            val jumlahTerjualList = listOf(12f, 8f, 5f)
-// Bikin BarEntry
-            val entries = ArrayList<BarEntry>()
-            for (i in barangList.indices) {
-                entries.add(BarEntry(i.toFloat(), jumlahTerjualList[i]))
-            }
-// Dataset dan Data
-            val dataSet = BarDataSet(entries, "Barang Terjual")
-            dataSet.color = Color.parseColor("#3F51B5")
-            dataSet.valueTextColor = Color.BLACK
-            dataSet.valueTextSize = 14f
-            val barData = BarData(dataSet)
-            barData.barWidth = 0.5f
-            barChart.data = barData
-// Styling BarChart
-            barChart.setBackgroundColor(Color.WHITE)
-            barChart.setDrawGridBackground(false)
-            barChart.description.isEnabled = false
-            barChart.axisRight.isEnabled = false
+        barChart.description.isEnabled = false
+        barChart.animateY(800)
+        barChart.legend.isEnabled = false
+        // Styling Chart
+        barChart.setDrawGridBackground(false)
+        barChart.setDrawBarShadow(false)
+        barChart.setFitBars(true)
+        barChart.setTouchEnabled(false)
+        barChart.setScaleEnabled(false)
+        barChart.setPinchZoom(false)
+        barChart.setDrawBorders(false)
+        barChart.description.isEnabled = false
 
-            barChart.axisLeft.setDrawGridLines(false)
-            barChart.axisLeft.textColor = Color.BLACK
-            barChart.axisLeft.textSize = 12f
-// XAxis pakai ValueFormatter
-            val xAxis = barChart.xAxis
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.setDrawGridLines(false)
-            xAxis.setDrawAxisLine(false)
-            xAxis.textColor = Color.BLACK
-            xAxis.textSize = 12f
-            xAxis.granularity = 1f
-            xAxis.setCenterAxisLabels(false)
-            xAxis.valueFormatter =
-                IndexAxisValueFormatter(barangList) // 🔥 ini buat nampilin nama barang
-// Legend
-            barChart.legend.isEnabled = false
-// Animasi
-            barChart.animateY(1000)
-// Refresh chart
-            barChart.invalidate()
+        // Left Axis
+        barChart.axisLeft.apply {
+            setDrawGridLines(false)
+            setDrawAxisLine(false)
+            textColor = Color.DKGRAY
+            textSize = 12f
+        }
 
+        // Right Axis dimatikan
+        barChart.axisRight.isEnabled = false
 
-        } else {
+        // X Axis
+        barChart.xAxis.apply {
+            position = XAxis.XAxisPosition.BOTTOM
+            setDrawGridLines(false)
+            setDrawAxisLine(false)
+            textColor = Color.DKGRAY
+            textSize = 12f
+            granularity = 1f
         }
     }
+    private fun updateChart(names: List<String>, values: List<Float>){
+        // 1) build entries
+        val entries = values.mapIndexed { i, v -> BarEntry(i.toFloat(), v) }
+         // 2) DataSet
+        val ds = BarDataSet(entries, "Terjual").apply {
+            color = ContextCompat.getColor(requireContext(), R.color.primary)
+            valueTextSize = 12f
+        }
+        // 3) BarData
+        barChart.data = BarData(ds).apply { barWidth = 0.5f }
+        // 4) X‑axis labels
+        barChart.xAxis.apply {
+            valueFormatter = IndexAxisValueFormatter(names)
+            position = XAxis.XAxisPosition.BOTTOM
+            granularity = 1f
+        }
+        // 5) Refresh
+        barChart.animateY(800)
+        barChart.notifyDataSetChanged()
+        barChart.invalidate()
 
+    }
     private fun inisialisasi(view: View) {
         barChart = view.findViewById(R.id.barChart)
         btn_tentang = view.findViewById(R.id.btn_tentang_aplikasi)
+        btn_hari = view.findViewById(R.id.btn_hari)
+        btn_minggu = view.findViewById(R.id.btn_minggu)
+        btn_bulan = view.findViewById(R.id.btn_bulan)
     }
 
     private fun checkStatusBar() {
