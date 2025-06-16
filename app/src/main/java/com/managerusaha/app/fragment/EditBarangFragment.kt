@@ -36,6 +36,8 @@ class EditBarangFragment : Fragment() {
 
     // Views
     private lateinit var ivBarang: ImageView
+    private lateinit var groupBack: FrameLayout
+    private lateinit var ivBack: ImageView
     private lateinit var etNama: EditText
     private lateinit var etStok: EditText
     private lateinit var spinnerKategori: Spinner
@@ -73,6 +75,8 @@ class EditBarangFragment : Fragment() {
 
     private fun initViews(root: View) {
         ivBarang = root.findViewById(R.id.iv_barang)
+        groupBack = root.findViewById(R.id.group_back)
+        ivBack = root.findViewById(R.id.iv_back)
         etNama = root.findViewById(R.id.et_nama)
         etStok = root.findViewById(R.id.et_kuantitas)
         spinnerKategori = root.findViewById(R.id.category_spinner)
@@ -165,6 +169,8 @@ class EditBarangFragment : Fragment() {
     }
 
     private fun setupButtons() {
+        groupBack.setOnClickListener { navigateBack() }
+        ivBack.setOnClickListener { navigateBack() }
         btnBatal.setOnClickListener { navigateBack() }
         btnSimpan.setOnClickListener { saveUpdate() }
         btnHapus.setOnClickListener { currentBarang?.let { confirmDelete(it) } }

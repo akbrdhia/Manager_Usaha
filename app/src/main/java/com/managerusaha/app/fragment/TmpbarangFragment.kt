@@ -88,9 +88,6 @@ class TmpbarangFragment : Fragment() {
         ivBack          = root.findViewById(R.id.iv_back)
     }
 
-    /**
-     * Setup pemilih gambar dengan ActivityResultContracts.GetContent
-     */
     private fun setupImagePicker() {
         pickImageLauncher = registerForActivityResult(GetContent()) { uri: Uri? ->
             uri?.let {
@@ -103,9 +100,6 @@ class TmpbarangFragment : Fragment() {
         }
     }
 
-    /**
-     * Setup format input harga dan modal menjadi Rupiah secara realtime
-     */
     private fun setupFormatters() {
         setupRupiahFormatter(etModal)
         setupRupiahFormatter(etHarga)
@@ -126,9 +120,6 @@ class TmpbarangFragment : Fragment() {
         }
     }
 
-    /**
-     * Setup dan observe data kategori untuk Spinner, lalu restore state form
-     */
     private fun setupSpinnerData() {
         kategoriViewModel.allKategori.observe(viewLifecycleOwner) { list ->
             val opts = mutableListOf("Lainnya")
