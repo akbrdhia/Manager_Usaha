@@ -19,6 +19,8 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
+import com.managerusaha.app.fragment.minor.KebijakanFragment
+import com.managerusaha.app.fragment.minor.PanduanFragment
 import com.managerusaha.app.fragment.minor.StokMasukkFragment
 import com.managerusaha.app.fragment.minor.tentangFragment
 import com.managerusaha.app.viewmodel.DashboardViewModel
@@ -39,6 +41,8 @@ class LainnyaFragment : Fragment() {
     private lateinit var tvhari : TextView
     private lateinit var tvminggu : TextView
     private lateinit var tvbulan : TextView
+    private lateinit var btn_panduan : Button
+    private lateinit var btn_kebijakan : Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,6 +98,12 @@ class LainnyaFragment : Fragment() {
     private fun setupclicklistener() {
         btn_tentang.setOnClickListener {
             (activity as MainActivity).replaceFragment(tentangFragment(), "TENTANG")
+        }
+        btn_panduan.setOnClickListener {
+            (activity as MainActivity).replaceFragment(PanduanFragment(), "PANDUAN")
+        }
+        btn_kebijakan.setOnClickListener {
+            (activity as MainActivity).replaceFragment(KebijakanFragment(), "KEBIJAKAN")
         }
     }
 
@@ -163,6 +173,8 @@ class LainnyaFragment : Fragment() {
         tvhari = view.findViewById(R.id.tvhari)
         tvminggu = view.findViewById(R.id.tvminggu)
         tvbulan = view.findViewById(R.id.tvbulan)
+        btn_panduan = view.findViewById(R.id.btn_panduan_penggunaan)
+        btn_kebijakan = view.findViewById(R.id.btn_kebijakan)
     }
 
     private fun checkStatusBar() {

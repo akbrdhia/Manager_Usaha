@@ -58,4 +58,11 @@
     <string name="_4_mengedit_barang">4. Mengedit barang</string>
     <string name="_4P">Ke halaman barang lalu click barang yang anda ingin edit, setelah selesai edit click tombol ok</string>
     <string name="_5P">Ke halaman barang lalu click (-) yang ada di kiri barang yang anda ingin hapus, setelah itu click tombol ok</string>
+    <string name="_1K"><![CDATA[• Data Barang: nama, kategori, stok, harga, barcode, gambar.\n• Riwayat Transaksi: tanggal, jumlah, tipe.\n• Izin kamera & storage untuk fitur scan dan gambar.]]></string>
+    <string name="_2K"><![CDATA[Data digunakan untuk manajemen inventaris, laporan stok, perhitungan omzet & keuntungan, serta fitur scan barcode.]]></string>
+    <string name="_4_penyimpanan_keamanan"><![CDATA[4. Penyimpanan & Keamanan]]></string>
+    <string name="_5K"><![CDATA[• CAMERA: scan barcode\n• STORAGE: pilih & tampilkan gambar produk]]></string>
+    <string name="bulan">Bulan</string>
+    <string name="minggu">Minggu</string>
+    <string name="hari">Hari</string>
 </resources>

@@ -63,7 +63,7 @@ class RiwayatFragment : Fragment() {
     }
 
     private fun setupFilterUI() {
-        val categories = listOf("All", "Audit", "Keluar", "Masuk")
+        val categories = listOf("All", "Keluar", "Masuk")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = adapter

@@ -41,13 +41,19 @@ class StokKeluarrFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews(view)         // ⚠️ ini harus sebelum setup apa pun
+        initViews(view)
+        checkStatusBar()// ⚠️ ini harus sebelum setup apa pun
         setupRecycler()
         setupSearch()           // pakai searchInput & searchWrap
         setupScan()
-        observeData()           // di dalamnya akan memanggil applyFilter()
-    }
+        observeData()
 
+    }
+    private fun checkStatusBar() {
+        val window = requireActivity().window
+        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
+        window.decorView.systemUiVisibility = 0
+    }
     private fun initViews(v: View) {
         rv              = v.findViewById(R.id.recyclerView)
         searchInput     = v.findViewById(R.id.search_in)

@@ -134,13 +134,18 @@ class KategoriAdapter(
 
             if (!barang.gambarPath.isNullOrEmpty()) {
                 try {
-                    val source = ImageDecoder.createSource(ivBarang.context.contentResolver, android.net.Uri.parse(barang.gambarPath))
-                    val bitmap = ImageDecoder.decodeBitmap(source)
-                    ivBarang.setImageBitmap(bitmap)
+                    val source = ImageDecoder.createSource(
+                        ivBarang.context.contentResolver,
+                        android.net.Uri.parse(barang.gambarPath)
+                    )
+                    ivBarang.setImageBitmap(ImageDecoder.decodeBitmap(source))
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    ivBarang.setImageResource(R.drawable.grey_round) // fallback kalau error
                 }
             } else {
+                // ← PENTING: reset placeholder jika tidak ada gambar
+                ivBarang.setImageResource(R.drawable.grey_round)
             }
 
             itemView.setOnClickListener {
@@ -148,4 +153,5 @@ class KategoriAdapter(
             }
         }
     }
+
 }

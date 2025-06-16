@@ -43,12 +43,17 @@ class StokMasukkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
+        checkStatusBar()
         setupRecycler()
         setupSearch()
         setupScan()
         observeData()
     }
-
+    private fun checkStatusBar() {
+        val window = requireActivity().window
+        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
+        window.decorView.systemUiVisibility = 0
+    }
     private fun initViews(v: View) {
         rv              = v.findViewById(R.id.recyclerView)
         searchInput     = v.findViewById(R.id.search_in)
