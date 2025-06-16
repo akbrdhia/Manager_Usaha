@@ -76,4 +76,61 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
     }
+
+    private fun startOfTomorrow(): Long = Calendar.getInstance().apply {
+        add(Calendar.DAY_OF_MONTH, 1)
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
+
+
+
+    private fun startOfNextWeek(): Long = Calendar.getInstance().apply {
+        add(Calendar.WEEK_OF_YEAR, 1)
+        set(Calendar.DAY_OF_WEEK, firstDayOfWeek)
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
+
+
+
+    private fun startOfNextMonth(): Long = Calendar.getInstance().apply {
+        add(Calendar.MONTH, 1)
+        set(Calendar.DAY_OF_MONTH, 1)
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
+
+
+    private val _pendapatanHari = MutableLiveData<Double>()
+    val pendapatanHari: LiveData<Double> = _pendapatanHari
+
+    private val _pendapatanMinggu = MutableLiveData<Double>()
+    val pendapatanMinggu: LiveData<Double> = _pendapatanMinggu
+
+    private val _pendapatanBulan = MutableLiveData<Double>()
+    val pendapatanBulan: LiveData<Double> = _pendapatanBulan
+
+    fun loadPendapatan() {
+        viewModelScope.launch {
+            val t0 = startOfToday()
+            val t1 = startOfTomorrow()
+            _pendapatanHari.postValue(repo.getPendapatan(t0, t1))
+
+            val w0 = startOfWeek()
+            val w1 = startOfNextWeek()
+            _pendapatanMinggu.postValue(repo.getPendapatan(w0, w1))
+
+            val m0 = startOfMonth()
+            val m1 = startOfNextMonth()
+            _pendapatanBulan.postValue(repo.getPendapatan(m0, m1))
+        }
+    }
+
 }

@@ -30,36 +30,45 @@ interface RiwayatDao {
     fun getRiwayatWithBarang(): LiveData<List<RiwayatWithBarang>>
 
     /** Total stok masuk bulan ini */
-    @Query("""
+    @Query(
+        """
       SELECT SUM(jumlah) FROM riwayat
       WHERE tipe = 'MASUK' AND tanggal BETWEEN :start AND :end
-    """)
+    """
+    )
     suspend fun getTotalStokMasukBulanIni(start: Long, end: Long): Int?
 
     /** Total stok keluar bulan ini */
-    @Query("""
+    @Query(
+        """
       SELECT SUM(jumlah) FROM riwayat
       WHERE tipe = 'KELUAR' AND tanggal BETWEEN :start AND :end
-    """)
+    """
+    )
     suspend fun getTotalStokKeluarBulanIni(start: Long, end: Long): Int?
 
     /** Total omset (penjualan) bulan ini: jumlah × harga jual */
-    @Query("""
+    @Query(
+        """
       SELECT SUM(r.jumlah * b.harga) FROM riwayat r
       JOIN barang b ON r.barangId = b.id
       WHERE r.tipe = 'KELUAR' AND r.tanggal BETWEEN :start AND :end
-    """)
+    """
+    )
     suspend fun getTotalOmsetBulanIni(start: Long, end: Long): Double?
 
     /** Total untung bulan ini: jumlah × (harga jual – modal) */
-    @Query("""
+    @Query(
+        """
       SELECT SUM(r.jumlah * (b.harga - b.modal)) FROM riwayat r
       JOIN barang b ON r.barangId = b.id
       WHERE r.tipe = 'KELUAR' AND r.tanggal BETWEEN :start AND :end
-    """)
+    """
+    )
     suspend fun getTotalUntungBulanIni(start: Long, end: Long): Double?
 
-    @Query("""
+    @Query(
+        """
     SELECT b.id AS id,
            b.nama AS nama,
            b.gambarPath AS gambarPath,
@@ -71,10 +80,12 @@ interface RiwayatDao {
     GROUP BY b.id
     ORDER BY total DESC
     LIMIT 6                                                                           
-  """)
+  """
+    )
     suspend fun getTop6Terlaris(startMillis: Long): List<TopBarang>
 
-    @Query("""
+    @Query(
+        """
   SELECT b.nama           AS nama,
          SUM(r.jumlah)    AS total
   FROM riwayat r
@@ -84,7 +95,20 @@ interface RiwayatDao {
   GROUP BY b.id
   ORDER BY total DESC
   LIMIT :limit
-""")
+"""
+    )
     suspend fun getTopTerlaris(startMillis: Long, limit: Int): List<TopBarang3>
+
+    @Query(
+        """
+  SELECT SUM(r.jumlah * b.harga)
+  FROM riwayat r
+  JOIN barang b ON r.barangId = b.id
+  WHERE r.tipe = 'KELUAR'
+    AND r.tanggal BETWEEN :start AND :end
+"""
+    )
+    suspend fun getPendapatanBetween(start: Long, end: Long): Double?
+
 
 }

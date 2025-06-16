@@ -60,4 +60,9 @@ class BarangRepository(application: Application) {
         }
     suspend fun getTopTerlarisSejak(startMillis: Long, limit: Int = 3) =
         riwayatDao.getTopTerlaris(startMillis, limit)
+
+    suspend fun getPendapatan(start: Long, end: Long): Double =
+        withContext(Dispatchers.IO) {
+            riwayatDao.getPendapatanBetween(start, end) ?: 0.0
+        }
 } 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.compose.animation.core.Easing
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -21,6 +22,9 @@ import com.managerusaha.app.R
 import com.managerusaha.app.fragment.minor.StokMasukkFragment
 import com.managerusaha.app.fragment.minor.tentangFragment
 import com.managerusaha.app.viewmodel.DashboardViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 
 class LainnyaFragment : Fragment() {
@@ -32,6 +36,9 @@ class LainnyaFragment : Fragment() {
     private lateinit var btn_hari : Button
     private lateinit var btn_minggu : Button
     private lateinit var btn_bulan : Button
+    private lateinit var tvhari : TextView
+    private lateinit var tvminggu : TextView
+    private lateinit var tvbulan : TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +61,16 @@ class LainnyaFragment : Fragment() {
         setupFilterButtons()
         subscribeTop3()
         vm.loadTop3(vm.startOfToday())
-
+        vm.loadPendapatan()
+        vm.pendapatanHari.observe(viewLifecycleOwner) { v ->
+            tvhari.text = formatRupiahTanpaDesimal(v)
+        }
+        vm.pendapatanMinggu.observe(viewLifecycleOwner) { v ->
+            tvminggu.text = formatRupiahTanpaDesimal(v)
+        }
+        vm.pendapatanBulan.observe(viewLifecycleOwner) { v ->
+            tvbulan.text = formatRupiahTanpaDesimal(v)
+        }
         setupclicklistener()
     }
 
@@ -144,11 +160,29 @@ class LainnyaFragment : Fragment() {
         btn_hari = view.findViewById(R.id.btn_hari)
         btn_minggu = view.findViewById(R.id.btn_minggu)
         btn_bulan = view.findViewById(R.id.btn_bulan)
+        tvhari = view.findViewById(R.id.tvhari)
+        tvminggu = view.findViewById(R.id.tvminggu)
+        tvbulan = view.findViewById(R.id.tvbulan)
     }
 
     private fun checkStatusBar() {
         val window = requireActivity().window
         window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
         window.decorView.systemUiVisibility = 0
+    }
+    fun formatRupiahTanpaDesimal(value: Double): String {
+        // Buat simbol khusus: Rp<spasi>
+        val symbols = DecimalFormatSymbols(Locale("id", "ID")).apply {
+            currencySymbol = "Rp "
+            groupingSeparator = '.'
+            // decimalSeparator akan diabaikan karena kita set no fraction
+        }
+
+        // Ambil instance DecimalFormat untuk currency, cast ke DecimalFormat
+        val df = DecimalFormat.getCurrencyInstance(Locale("id", "ID")) as DecimalFormat
+        df.decimalFormatSymbols = symbols
+        df.maximumFractionDigits = 0
+        df.minimumFractionDigits = 0
+        return df.format(value)
     }
 }

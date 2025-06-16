@@ -89,11 +89,11 @@
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintStart_toStartOf="@+id/tvminggu"
             app:layout_constraintTop_toTopOf="@+id/textView7" />
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/tvhari"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
@@ -117,7 +117,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView7" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/tvminggu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
@@ -155,7 +155,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView7" />
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/tvbulan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
