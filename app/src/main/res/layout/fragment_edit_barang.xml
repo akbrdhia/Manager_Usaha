@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="@string/edit_barang"
+            android:text="@string/barang"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -121,6 +120,53 @@
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="@+id/category_wrap"
             app:layout_constraintStart_toEndOf="@+id/category_wrap"
+            app:layout_constraintTop_toTopOf="@+id/category_wrap" />
+
+        <FrameLayout
+            android:id="@+id/line"
+            android:layout_width="2dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/grey_1"
+            app:layout_constraintBottom_toBottomOf="@+id/category_wrap"
+            app:layout_constraintStart_toEndOf="@+id/plus_ico"
+            app:layout_constraintTop_toTopOf="@+id/category_wrap" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_hasil_wrap"
+            style="@style/DefaultTextInputLayout"
+            android:layout_width="127dp"
+            android:layout_height="52dp"
+            android:hint=" "
+            android:focusable="false"
+            android:clickable="false"
+            android:layout_marginStart="17dp"
+            app:layout_constraintBottom_toBottomOf="@+id/category_wrap"
+            app:layout_constraintStart_toEndOf="@+id/line">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_hasil_scan"
+                style="@style/DefaultTextInputEditText"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/poppins"
+                android:hint="Hasil Scan"
+                app:hintTextColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/ic_scan"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/g_b_outline"
+            android:clickable="true"
+            android:padding="7dp"
+            android:src="@drawable/ic_barscan"
+            app:layout_constraintBottom_toBottomOf="@+id/et_hasil_wrap"
+            app:layout_constraintStart_toEndOf="@+id/et_hasil_wrap"
             app:layout_constraintTop_toTopOf="@+id/category_wrap" />
 
         <LinearLayout
@@ -215,10 +261,10 @@
             android:layout_width="212dp"
             android:layout_height="198dp"
             android:layout_gravity="center"
-            android:background="#9aeff0"
+            android:background="@color/grey_1"
             android:layout_marginTop="8dp"
             android:padding="8dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_pic"
@@ -226,7 +272,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <Button
-            android:id="@+id/btn_tambah"
+            android:id="@+id/btn_update"
             android:layout_width="140dp"
             android:layout_height="40dp"
             android:background="@drawable/secondary_round"
@@ -247,8 +293,8 @@
             android:text="@string/hapus"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="@+id/btn_tambah"
-            app:layout_constraintTop_toBottomOf="@+id/btn_tambah" />
+            app:layout_constraintStart_toStartOf="@+id/btn_update"
+            app:layout_constraintTop_toBottomOf="@+id/btn_update" />
 
 
 

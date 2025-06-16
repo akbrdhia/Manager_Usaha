@@ -1,113 +1,154 @@
 package com.managerusaha.app.fragment.minor
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
 import com.managerusaha.app.dialog.sheetstokListDialogFragment
-import com.managerusaha.app.room.AppDatabase
+import com.managerusaha.app.room.entity.Barang
 import com.managerusaha.app.utills.adapter.KategoriAdapter
 import com.managerusaha.app.utills.model.KategoryExpand
+import com.managerusaha.app.viewmodel.BarangViewModel
 
 class StokKeluarrFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var kategoriAdapter: KategoriAdapter
-    private lateinit var database: AppDatabase
-    private lateinit var scan: ImageView
+    private val vm: BarangViewModel by viewModels()
+
+    private lateinit var rv: RecyclerView
+    private lateinit var adapter: KategoriAdapter
+    private lateinit var searchInput: TextInputEditText
+    private lateinit var searchWrap: TextInputLayout
+    private lateinit var spinnerCategory: Spinner
+    private lateinit var scanBtn: ImageView
+
+    // full list all Barang
+    private var fullList: List<Barang> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stok_keluarr, container, false)
-    }
+    ): View = inflater.inflate(R.layout.fragment_stok_keluarr, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        inisialisasi(view)
-        database = AppDatabase.getDatabase(requireContext())
-        setupRecyclerView()
-        loadBarangData()
-        handleItemClick()
+        initViews(view)         // ⚠️ ini harus sebelum setup apa pun
+        setupRecycler()
+        setupSearch()           // pakai searchInput & searchWrap
+        setupScan()
+        observeData()           // di dalamnya akan memanggil applyFilter()
     }
 
-    private fun handleItemClick() {
-        scan.setOnClickListener {
-            val camFragment = CamFragment().apply {
-                arguments = Bundle().apply {
-                    putString("from", "stokkeluar")
-                }
-            }
+    private fun initViews(v: View) {
+        rv              = v.findViewById(R.id.recyclerView)
+        searchInput     = v.findViewById(R.id.search_in)
+        searchWrap      = v.findViewById(R.id.search_wrap)
+        spinnerCategory = v.findViewById(R.id.spinner_category)
+        scanBtn         = v.findViewById(R.id.ic_scan)
 
+        // set statusbar putih + ikon gelap
+        requireActivity().window.apply {
+            statusBarColor = ContextCompat.getColor(context, R.color.white)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            }
+        }
+    }
+
+    private fun setupRecycler() {
+        adapter = KategoriAdapter(mutableListOf()) { barang ->
+            showPopup(barang.id)
+        }
+        rv.layoutManager = LinearLayoutManager(requireContext())
+        rv.adapter = adapter
+    }
+
+    private fun observeData() {
+        vm.allBarang.observe(viewLifecycleOwner) { list ->
+            fullList = list
+            setupCategorySpinner() // isi spinner kategori
+            applyFilter()          // tampilkan semua dulu
+        }
+    }
+
+    private fun setupCategorySpinner() {
+        val cats = listOf("Semua") +
+                fullList.map { it.kategori ?: "Tanpa Kategori" }.distinct()
+        spinnerCategory.adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            cats
+        ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+    }
+
+    private fun setupSearch() {
+        // ketika ikon search (di dalam TextInputLayout) diklik
+        searchWrap.setStartIconOnClickListener {
+            applyFilter()
+        }
+    }
+
+    private fun setupScan() {
+        scanBtn.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, camFragment)
-                .addToBackStack(null) // ini penting biar bisa "balik"
+                .replace(R.id.fragment_container,
+                    CamFragment().apply {
+                        arguments = Bundle().apply { putString("from", "stokkeluar") }
+                    })
+                .addToBackStack(null)
                 .commit()
         }
-
-
-    }
-
-    private fun inisialisasi(view: View) {
-        recyclerView = view.findViewById(R.id.recyclerView)
-        scan = view.findViewById(R.id.ic_scan)
-
-    }
-
-    private fun loadBarangData() {
-        Log.d("StokFragment", "Starting to load barang data")
-        database.barangDao().getAllBarang().observe(viewLifecycleOwner) { barangList ->
-            Log.d("StokFragment", "Received barang list with size: ${barangList.size}")
-            if (barangList.isEmpty()) {
-                Log.d("StokFragment", "Barang list is empty")
-                return@observe
+        parentFragmentManager.setFragmentResultListener(
+            "scan_result", viewLifecycleOwner
+        ) { _, bundle ->
+            bundle.getString("rawvalue")?.let { code ->
+                vm.findByBarcode(code) { found ->
+                    if (found != null) showPopup(found.id)
+                    else Toast.makeText(
+                        requireContext(),
+                        "Barang barcode=$code tidak ditemukan",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-
-            val kategoriMap = barangList.groupBy { it.kategori ?: "Tanpa Kategori" }
-            Log.d("StokFragment", "Grouped into ${kategoriMap.size} categories")
-
-            val kategoriList = kategoriMap.map { (key, value) ->
-                Log.d("StokFragment", "Category: $key, Items: ${value.size}")
-                KategoryExpand(key, value)
-            }
-
-            kategoriAdapter = KategoriAdapter(kategoriList.toMutableList()) { barang ->
-               navigatetopopup(barang.id)
-            }
-            recyclerView.adapter = kategoriAdapter
-            Log.d("StokFragment", "Adapter updated with new data")
         }
     }
 
+    private fun applyFilter() {
+        val q = searchInput.text.toString().trim().lowercase()
+        val selCat = spinnerCategory.selectedItem as String
 
-
-    private fun navigatetopopup(barangid: Int) {
-        val sheet = sheetstokListDialogFragment()
-        val bundle = Bundle()
-        bundle.putInt("barangid", barangid)
-        bundle.putString("mode", "KELUAR")
-        sheet.arguments = bundle
-        Log.d("StokFragment", "Navigating to popup with barangid: $barangid")
-        sheet.show(parentFragmentManager, "sheet")
-    }
-
-    private fun setupRecyclerView() {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        kategoriAdapter = KategoriAdapter(mutableListOf()) { barang ->
-           //wait
+        var filtered = fullList
+        if (q.isNotEmpty()) {
+            filtered = filtered.filter {
+                it.nama.lowercase().contains(q)
+            }
         }
-        recyclerView.adapter = kategoriAdapter
-        Log.d("StokFragment", "RecyclerView setup completed")
+        if (selCat != "Semua") {
+            filtered = filtered.filter { it.kategori == selCat }
+        }
+
+        // rebuild grouped adapter
+        val grp = filtered.groupBy { it.kategori ?: "Tanpa Kategori" }
+        val out = grp.map { (cat, items) -> KategoryExpand(cat, items) }
+        adapter.updateData(out)
     }
 
+    private fun showPopup(id: Int) {
+        sheetstokListDialogFragment().apply {
+            arguments = Bundle().apply {
+                putInt("barangid", id)
+                putString("mode", "KELUAR")
+            }
+        }.show(parentFragmentManager, "sheet")
+    }
 }

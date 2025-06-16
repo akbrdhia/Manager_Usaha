@@ -52,7 +52,7 @@
         app:layout_constraintStart_toEndOf="@+id/search_wrap">
 
         <Spinner
-            android:id="@+id/category_spinner"
+            android:id="@+id/spinner_category"
             android:layout_width="96dp"
             android:layout_height="48dp"
             android:textSize="15sp" />
@@ -65,8 +65,8 @@
         android:layout_marginStart="12dp"
         android:background="@drawable/g_b_outline"
         android:clickable="true"
-        android:padding="5dp"
-        android:src="@drawable/ic_scan"
+        android:padding="7dp"
+        android:src="@drawable/ic_barscan"
         app:layout_constraintStart_toEndOf="@+id/category_wrap"
         app:layout_constraintTop_toTopOf="@+id/category_wrap" />
 

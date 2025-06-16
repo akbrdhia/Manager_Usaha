@@ -39,4 +39,7 @@ interface BarangDao {
     @Query("SELECT * FROM barang WHERE id = :barangId")
     fun getBarangById(barangId: Int): LiveData<Barang>
 
+    @Query("SELECT * FROM barang WHERE barcode = :code LIMIT 1")
+    suspend fun findByBarcode(code: String): Barang?
+
 }

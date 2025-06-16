@@ -10,6 +10,7 @@ import com.managerusaha.app.room.entity.Barang
 import com.managerusaha.app.room.entity.Riwayat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Date
 
 class BarangViewModel(application: Application) : AndroidViewModel(application) {
@@ -81,6 +82,16 @@ class BarangViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getBarangById(barangId: Int): LiveData<Barang> {
         return repository.getBarangById(barangId)
+    }
+    /** lookup barcode via callback */
+    fun findByBarcode(code: String, onResult: (Barang?) -> Unit) {
+        viewModelScope.launch {
+            // pindah ke IO, lalu kembali ke Main thread
+            val b = withContext(Dispatchers.IO) {
+                repository.findByBarcode(code)
+            }
+            onResult(b)
+        }
     }
 
 }

@@ -42,4 +42,9 @@
     <string name="harian">Harian</string>
     <string name="mingguan">Mingguan</string>
     <string name="bulanan">Bulanan</string>
+    <string name="tentang_aplikasi">Tentang Aplikasi</string>
+    <string name="proyek_ini_adalah_aplikasi_manajemen_bisnis_berbasis_android_yang_dirancang_untuk_membantu_pengusaha_umkm_mengelola_usaha_mereka_secara_lebih_efektif_aplikasi_ini_mencakup_fitur_seperti_pengelolaan_stok_barang_pencatatan_transaksi_masuk_dan_keluar_barang_serta_laporan_keuntungan_secara_terstruktur_dengan_memanfaatkan_teknologi_berbasis_android_aplikasi_ini_diakses_dengan_mudah_melalui_perangkat_smartphone_sehingga_pengusaha_dapat_memantau_bisnis_mereka_kapan_saja_dan_di_mana_saja_sistem_akan_memproses_data_yang_dimasukkan_pengguna_seperti_stok_barang_harga_dan_transaksi_untuk_menghasilkan_informasi_terkini_yang_mendukung_pengambilan_keputusan_bisnis">Proyek ini adalah aplikasi manajemen bisnis berbasis Android yang dirancang untuk membantu pengusaha UMKM mengelola usaha mereka secara lebih efektif. Aplikasi ini mencakup fitur seperti pengelolaan stok barang, pencatatan transaksi masuk dan keluar barang, serta laporan keuntungan secara terstruktur. Dengan memanfaatkan teknologi berbasis Android, aplikasi ini diakses dengan mudah melalui perangkat smartphone, sehingga pengusaha dapat memantau bisnis mereka kapan saja dan di mana saja. Sistem akan memproses data yang dimasukkan pengguna, seperti stok barang, harga, dan transaksi, untuk menghasilkan informasi terkini yang mendukung pengambilan keputusan bisnis.</string>
+    <string name="_1_0_1_5_26_2025">1.0.1 (5/26/2025)</string>
+    <string name="versi">Versi</string>
+    <string name="keb_priv">Kebijakan Privasi</string>
 </resources>

@@ -3,31 +3,37 @@ package com.managerusaha.app.fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.textfield.TextInputEditText
 import com.managerusaha.app.MainActivity
 import com.managerusaha.app.R
 import com.managerusaha.app.dialog.KategoriDialogFragment
 import com.managerusaha.app.room.entity.Barang
 import com.managerusaha.app.room.entity.Kategori
 import com.managerusaha.app.viewmodel.BarangViewModel
+import com.managerusaha.app.viewmodel.BarangFormViewModel
 import com.managerusaha.app.viewmodel.KategoriViewModel
 import java.text.NumberFormat
-import java.util.Locale
+import java.util.*
 
+/**
+ * Fragment untuk menambah/edit barang dengan stateful form
+ */
 class TmpbarangFragment : Fragment() {
 
-    // ViewModels
+    // ViewModels: satu untuk operasi CRUD, satu untuk daftar kategori, dan satu untuk menyimpan state form
     private val barangViewModel: BarangViewModel by viewModels()
     private val kategoriViewModel: KategoriViewModel by viewModels()
+    private val formVm: BarangFormViewModel by viewModels()
 
     // Views
     private lateinit var ivBarang: ImageView
@@ -36,199 +42,217 @@ class TmpbarangFragment : Fragment() {
     private lateinit var spinnerKategori: Spinner
     private lateinit var etHarga: EditText
     private lateinit var etModal: EditText
+    private lateinit var etHasilScan: TextInputEditText
     private lateinit var btnTambah: Button
     private lateinit var btnBatal: Button
     private lateinit var plusIcon: ImageView
+    private lateinit var icScan: ImageView
     private lateinit var groupBack: FrameLayout
     private lateinit var ivBack: ImageView
 
     // Image picker launcher
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
-    private var selectedImagePath: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_tmpbarang, container, false)
-    }
+    ): View =  inflater.inflate(R.layout.fragment_tmpbarang, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         setupImagePicker()
         setupFormatters()
-        setupSpinnerData()
+        setupTextWatchers()
+        setupScanListener()
         setupClickListeners()
+        setupSpinnerData()
     }
 
-    // Inisialisasi semua view dari layout
+    /**
+     * Inisialisasi semua view dari layout
+     */
     private fun initViews(root: View) {
-        ivBarang = root.findViewById(R.id.iv_barang)
-        etNama = root.findViewById(R.id.et_nama)
-        etStok = root.findViewById(R.id.et_kuantitas)
+        ivBarang        = root.findViewById(R.id.iv_barang)
+        etNama          = root.findViewById(R.id.et_nama)
+        etStok          = root.findViewById(R.id.et_kuantitas)
         spinnerKategori = root.findViewById(R.id.category_spinner)
-        etModal = root.findViewById(R.id.et_harga_beli)
-        etHarga = root.findViewById(R.id.et_harga_jual)
-        btnTambah = root.findViewById(R.id.btn_tambah)
-        btnBatal = root.findViewById(R.id.btn_batal)
-        plusIcon = root.findViewById(R.id.plus_ico)
-        groupBack = root.findViewById(R.id.group_back)
-        ivBack = root.findViewById(R.id.iv_back)
+        etModal         = root.findViewById(R.id.et_harga_beli)
+        etHarga         = root.findViewById(R.id.et_harga_jual)
+        etHasilScan     = root.findViewById(R.id.et_hasil_scan)
+        btnTambah       = root.findViewById(R.id.btn_tambah)
+        btnBatal        = root.findViewById(R.id.btn_batal)
+        plusIcon        = root.findViewById(R.id.plus_ico)
+        icScan          = root.findViewById(R.id.ic_scan)
+        groupBack       = root.findViewById(R.id.group_back)
+        ivBack          = root.findViewById(R.id.iv_back)
     }
 
-    // Siapkan ActivityResult untuk pemilihan gambar
+    /**
+     * Setup pemilih gambar dengan ActivityResultContracts.GetContent
+     */
     private fun setupImagePicker() {
-        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        pickImageLauncher = registerForActivityResult(GetContent()) { uri: Uri? ->
             uri?.let {
-                // Ambil persistable permission (wajib)
                 requireContext().contentResolver.takePersistableUriPermission(
-                    it,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    it, Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
-
-                // Tampilkan gambar dan simpan path
                 ivBarang.setImageURI(it)
-                selectedImagePath = it.toString()
+                formVm.gambarPath = it.toString()
             }
         }
     }
 
-
-    // Format input harga dan modal menjadi Rupiah secara realtime
+    /**
+     * Setup format input harga dan modal menjadi Rupiah secara realtime
+     */
     private fun setupFormatters() {
         setupRupiahFormatter(etModal)
         setupRupiahFormatter(etHarga)
     }
 
     private fun setupRupiahFormatter(editText: EditText) {
-        editText.addTextChangedListener(object : TextWatcher {
-            private var current = ""
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
-            override fun afterTextChanged(s: Editable?) {
-                val input = s.toString()
-                if (input == current) return
-                editText.removeTextChangedListener(this)
-
-                val cleanString = input.replace("[Rp,.\\s]".toRegex(), "")
-                val parsed = if (cleanString.isNotEmpty()) cleanString.toLong() else 0L
-                val formatted = formatRupiah(parsed)
-
-                current = formatted
+        editText.doAfterTextChanged { s ->
+            val input = s.toString().replace("[Rp,.\\s]".toRegex(), "")
+            val value = input.toLongOrNull() ?: 0L
+            val formatted = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+                .format(value)
+                .replace("Rp", "Rp.")
+                .replace(",00", "")
+            if (formatted != editText.text.toString()) {
                 editText.setText(formatted)
                 editText.setSelection(formatted.length)
-                editText.addTextChangedListener(this)
             }
-        })
+        }
     }
 
-    // Mengonversi angka ke format Rupiah
-    private fun formatRupiah(amount: Long): String {
-        val localeID = Locale("id", "ID")
-        val formatter = NumberFormat.getCurrencyInstance(localeID)
-        return formatter.format(amount).replace("Rp", "Rp.").replace(",00", "")
-    }
-
-    // Mengambil data kategori dan set ke Spinner
+    /**
+     * Setup dan observe data kategori untuk Spinner, lalu restore state form
+     */
     private fun setupSpinnerData() {
-        kategoriViewModel.allKategori.observe(viewLifecycleOwner) { daftarKategori ->
-            val options = mutableListOf("Lainnya")
-            options.addAll(daftarKategori.map { it.nama })
-
+        kategoriViewModel.allKategori.observe(viewLifecycleOwner) { list ->
+            val opts = mutableListOf("Lainnya")
+            opts.addAll(list.map { it.nama })
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
-                options
-            ).also {
-                it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            }
+                opts
+            ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
             spinnerKategori.adapter = adapter
+
+            // Restore state setelah adapter terpasang
+            restoreFormState(adapter)
         }
     }
 
-    // Pasang semua click listener
-    private fun setupClickListeners() {
-        // Pilih gambar
-        ivBarang.setOnClickListener {
-            pickImageLauncher.launch("image/*")
-        }
-
-        // Tambah kategori baru lewat dialog
-        plusIcon.setOnClickListener {
-            val dialog = KategoriDialogFragment { namaBaru ->
-                kategoriViewModel.insertKategori(Kategori(nama = namaBaru))
-                Toast.makeText(
-                    requireContext(),
-                    "Kategori ditambahkan: $namaBaru",
-                    Toast.LENGTH_SHORT
-                ).show()
+    /**
+     * Simpan setiap perubahan text ke ViewModel agar state bertahan
+     */
+    private fun setupTextWatchers() {
+        etNama.doAfterTextChanged    { formVm.nama       = it.toString() }
+        etStok.doAfterTextChanged    { formVm.stok       = it.toString() }
+        etHarga.doAfterTextChanged   { formVm.hargaJual  = it.toString() }
+        etModal.doAfterTextChanged   { formVm.hargaModal = it.toString() }
+        spinnerKategori.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                formVm.kategori = parent!!.getItemAtPosition(pos).toString()
             }
-            dialog.show(parentFragmentManager, "KategoriDialog")
         }
+    }
+    private fun setupScanListener() {
+        parentFragmentManager.setFragmentResultListener(
+            "scan_result", viewLifecycleOwner
+        ) { _, bundle ->
+            formVm.barcode = bundle.getString("rawvalue", "")
+            etHasilScan.setText(formVm.barcode)
+        }
+        icScan.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, com.managerusaha.app.fragment.minor.CamFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+    }
 
-        // Tombol Batal atau kembali
+    private fun setupClickListeners() {
+        ivBarang.setOnClickListener { pickImageLauncher.launch("image/*") }
+        plusIcon.setOnClickListener {
+            KategoriDialogFragment { name ->
+                kategoriViewModel.insertKategori(Kategori(nama = name))
+            }.show(parentFragmentManager, "dlg")
+        }
         btnBatal.setOnClickListener { navigateBack() }
         groupBack.setOnClickListener { navigateBack() }
         ivBack.setOnClickListener { navigateBack() }
-
-        // Tombol Tambah simpan barang
         btnTambah.setOnClickListener { tambahBarang() }
     }
 
-    // Navigasi kembali ke StokFragment
+    /**
+     * Restore seluruh state form, termasuk spinner dan image
+     */
+    private fun restoreFormState(adapter: ArrayAdapter<String>) {
+        // Spinner selection
+        val idx = adapter.getPosition(formVm.kategori)
+        spinnerKategori.setSelection(if (idx >= 0) idx else 0)
+
+        // Fields
+        etNama.setText(formVm.nama)
+        etStok.setText(formVm.stok)
+        etHarga.setText(formVm.hargaJual)
+        etModal.setText(formVm.hargaModal)
+        etHasilScan.setText(formVm.barcode)
+        formVm.gambarPath?.let { ivBarang.setImageURI(Uri.parse(it)) }
+    }
+
     private fun navigateBack() {
         (activity as MainActivity).replaceFragment(StokFragment(), "STOK")
     }
 
-    // Validasi input dan simpan barang baru
+    private fun cleanNumber(input: String): Double {
+        // Hapus semua yang bukan digit
+        val digitsOnly = input.replace("\\D".toRegex(), "")
+        return digitsOnly.toDoubleOrNull() ?: 0.0
+    }
+
     private fun tambahBarang() {
         val nama = etNama.text.toString().trim()
-        val kategori = spinnerKategori.selectedItem.toString()
-        val stokStr = etStok.text.toString().trim()
-        val harga = getRawValue(etHarga.text.toString())
-        val modal = getRawValue(etModal.text.toString())
+        val stok = etStok.text.toString().toIntOrNull() ?: 0
+
+        // BACA LANGSUNG DARI EditText yang sudah diformat
+        val harga = cleanNumber(etHarga.text.toString())
+        val modal = cleanNumber(etModal.text.toString())
+
+        Log.d("Tmpbarang", ">>> harga=$harga, modal=$modal")
 
         // Validasi
         if (nama.isEmpty()) {
-            etNama.error = "Nama barang wajib diisi"
+            etNama.error = "Nama wajib diisi"
             return
         }
-        if (kategori.isEmpty() || kategori == "Lainnya") {
-            Toast.makeText(requireContext(), "Kategori belum dipilih", Toast.LENGTH_SHORT).show()
-            return
-        }
-        val stok = stokStr.toIntOrNull()
-        if (stok == null || stok < 0) {
+        if (stok < 0) {
             etStok.error = "Stok minimal 0"
             return
         }
         if (harga <= 0) {
-            etHarga.error = "Harga minimal Rp. 0"
+            etHarga.error = "Harga minimal Rp 1"
             return
         }
         if (modal < 0) {
-            etModal.error = "Modal minimal Rp. 0"
+            etModal.error = "Modal minimal Rp 0"
             return
         }
 
-        val barangBaru = Barang(
+        val barang = Barang(
             nama = nama,
-            kategori = kategori,
+            kategori = formVm.kategori,
             stok = stok,
             harga = harga,
             modal = modal,
-            gambarPath = selectedImagePath
+            barcode = formVm.barcode,
+            gambarPath = formVm.gambarPath
         )
-
-        barangViewModel.insertBarang(barangBaru)
-        Toast.makeText(requireContext(), "Barang berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+        barangViewModel.insertBarang(barang)
         navigateBack()
-    }
-
-    // Mengubah string "Rp.1.000" → angka murni 1000.0
-    private fun getRawValue(input: String): Double {
-        val cleanString = input.replace("[^0-9]".toRegex(), "")
-        return cleanString.toDoubleOrNull() ?: 0.0
     }
 }

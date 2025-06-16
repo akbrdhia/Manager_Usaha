@@ -1,139 +1,159 @@
+
 package com.managerusaha.app.fragment.minor
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Toast
+
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
-import android.annotation.SuppressLint
-import android.widget.Button
-import android.widget.ImageView
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.common.Barcode
-import com.managerusaha.app.MainActivity
+import com.google.mlkit.vision.common.InputImage
 import com.managerusaha.app.R
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class CamFragment : Fragment() {
 
+    companion object {
+        private const val REQUEST_CAMERA = 1001
+    }
+
     private lateinit var previewView: PreviewView
     private lateinit var cameraExecutor: ExecutorService
-    private var from = ""
     private var camera: androidx.camera.core.Camera? = null
+    private var fromMode: String = ""
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cam, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         previewView = view.findViewById(R.id.prev_cam)
-        from = arguments?.getString("from")?: ""
-        val btnFlash = view.findViewById<ImageView>(R.id.btn_flash)
-        btnFlash.setOnClickListener {
+        fromMode = arguments?.getString("from") ?: ""
+        cameraExecutor = Executors.newSingleThreadExecutor()
+
+        view.findViewById<ImageView>(R.id.btn_flash).setOnClickListener {
             toggleFlash()
         }
 
-        cameraExecutor = Executors.newSingleThreadExecutor()
-        startCamera()
+        // check permission
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            startCamera()
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA)
+        }
     }
 
-
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CAMERA && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startCamera()
+        } else {
+            Toast.makeText(requireContext(), "Izin kamera diperlukan untuk scan", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
-            val preview = androidx.camera.core.Preview.Builder().build().also {
+
+            // Preview UseCase
+            val preview = Preview.Builder().build().also {
                 it.setSurfaceProvider(previewView.surfaceProvider)
             }
 
-            val barcodeScanner = BarcodeScanning.getClient(
+            // Analysis UseCase untuk barcode
+            val scanner = BarcodeScanning.getClient(
                 BarcodeScannerOptions.Builder()
                     .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
                     .build()
             )
-
-            val imageAnalysis = ImageAnalysis.Builder()
-                .build()
-                .also {
-                    it.setAnalyzer(cameraExecutor) { imageProxy ->
-                        processImageProxy(barcodeScanner, imageProxy)
-                    }
-                }
-
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            try {
-                cameraProvider.unbindAll()
-                camera = cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageAnalysis
-                )
-            } catch (e: Exception) {
-                Log.e("BarcodeScanner", "Use case binding failed", e)
+            val analysis = ImageAnalysis.Builder().build().also {
+                it.setAnalyzer(cameraExecutor) { proxy -> processImageProxy(scanner, proxy) }
             }
 
+            val selector = CameraSelector.DEFAULT_BACK_CAMERA
+            try {
+                cameraProvider.unbindAll()
+                camera = cameraProvider.bindToLifecycle(this, selector, preview, analysis)
+            } catch (e: Exception) {
+                Log.e("CamFragment", "Binding failed", e)
+            }
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    fun toggleFlash() {
-        val currentTorchState = camera?.cameraInfo?.torchState?.value
-        val enable = currentTorchState != androidx.camera.core.TorchState.ON
-        camera?.cameraControl?.enableTorch(enable)
-        Log.d("CamFragment", "Torch state toggled: $enable")
+    private fun toggleFlash() {
+        camera?.let {
+            val state = it.cameraInfo.torchState.value
+            it.cameraControl.enableTorch(state != androidx.camera.core.TorchState.ON)
+        }
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    private fun processImageProxy(scanner: com.google.mlkit.vision.barcode.BarcodeScanner, imageProxy: ImageProxy) {
+    private fun processImageProxy(
+        scanner: com.google.mlkit.vision.barcode.BarcodeScanner,
+        imageProxy: ImageProxy
+    ) {
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
             scanner.process(image)
-                .addOnSuccessListener { barcodes ->
-                    for (barcode in barcodes) {
-                        val rawValue = barcode.rawValue
-                        Log.d("BarcodeScanner", "Barcode detected: $rawValue")
-                        when(from){
-                            "stokkeluar","stokmasuk","" -> navigateto(rawValue)
-                        }
+                .addOnSuccessListener { list ->
+                    list.firstOrNull()?.rawValue?.let { value ->
+                        Log.d("CamFragment", "Barcode: $value")
+                        deliverResult(value)
                     }
                 }
-                .addOnFailureListener {
-                    Log.e("BarcodeScanner", "Barcode scan failed", it)
-                }
-                .addOnCompleteListener {
-                    imageProxy.close()
-                }
+                .addOnCompleteListener { imageProxy.close() }
         } else {
             imageProxy.close()
         }
     }
 
-    private fun navigateto(rawValue: String?) {
-        val result = Bundle()
-        result.putString("rawvalue", rawValue)
-        parentFragmentManager.setFragmentResult("scan_result", result)
-
-        // Balik ke fragment sebelumnya
-        parentFragmentManager.popBackStack()
+    private fun deliverResult(value: String) {
+        // Jangan pakai requireActivity() karena bisa NPE kalau fragment sudah detached
+        val fm = activity?.supportFragmentManager ?: return
+        fm.setFragmentResult(
+            "scan_result",
+            Bundle().apply { putString("rawvalue", value) }
+        )
+        fm.popBackStack()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         cameraExecutor.shutdown()
     }
 }
+
